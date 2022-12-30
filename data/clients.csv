@@ -10,7 +10,7 @@
 "NAT-A","month","flat rate",180
 "NAT-B","month","flat rate",220
 "NAT-C","month","flat rate",195
-"TR-La","quarter","flat rate",85
-"TR-Ma","quarter","hourly",500
-"X5","month","flat_rate",85
+"TR-La","quarter","hourly",85
+"TR-Ma","quarter","flat_rate",500
+"X5","month","hourly",85
 "ZR","month","hourly",190

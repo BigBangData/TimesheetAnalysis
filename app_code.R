@@ -1,9 +1,13 @@
 # TO DO:
+# fake data with BIZ hours
+# increase workload but careful not to go over midnight
+# might need more curated num sessions
+
 # fix for new year and leap year
 # do client code data validation
 # fix for variable rates per client
 # recreate and add to github and portfolio
-# fake data, different logo
+# fake data, different logo -> take pic of monty python clock!
 
 # Setup
 # -------
@@ -44,8 +48,8 @@ suppressPackageStartupMessages(install_packages(pkgs))
 # ---------
 
 na_strings <- c("", "-", "NA", "N/A", "#N/A", "na", "n/a", "#n/a", "NULL", "Null", "null")
-tms <- read.csv("timesheet.csv", na.strings = na_strings)
-rts <- read.csv("codes_rates.csv", na.strings = na_strings)
+tms <- read.csv("data/timesheet.csv", na.strings = na_strings)
+rts <- read.csv("data/clients.csv", na.strings = na_strings)
 
 # fix data types
 tms$date <- as.Date(tms$date, format="%Y-%m-%d")
@@ -54,6 +58,23 @@ tms$start_time <- strptime(paste0(tms$date, ' ', tms$clock_in), "%Y-%m-%d %H:%M:
 tms$end_time <- strptime(paste0(tms$date, ' ', tms$clock_out), "%Y-%m-%d %H:%M:%S")
 
 tms$session_hs <- round(as.numeric(sub("secs", "", tms$end_time - tms$start_time))/60, 2)
+
+
+# examine data to make sure ends of sessions are indeed before midnight
+# but also not before 6 AM
+# t <- tms 
+# d <- t %>%
+#     select(date, end_time) %>%
+#     group_by(date) %>%
+#     summarise(
+#         first_end = dplyr::first(end_time),
+#         last_end = dplyr::last(end_time)
+#     )
+
+# d[hour(d$last_end) == max(hour(d$last_end)), ]
+# d[hour(d$first_end) == min(hour(d$first_end)), ]
+
+
 
 # tms <- tms[which(!is.na(tms$date)),]
 tms <- apply(tms, 2, function(x) trimws(x))

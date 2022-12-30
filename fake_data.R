@@ -2,6 +2,8 @@
 # Faking data:
 # ------------
 
+# setwd("../GitHub/TimesheetAnalysis")
+
 # creata a dfm of dates worked
 rm(list=ls())
 
@@ -55,6 +57,12 @@ session_n_probs <- c(
 
 dfm$num_sessions <- sample(x = 1:22, size = nrow(dfm), replace = TRUE, prob = session_n_probs)
 
+# explore num sessions with late start times, reduce by half, 2x, fix any leftovers over 8
+dfm$num_sessions[dfm$start_time > '12:00:00'] <- ceiling(dfm$num_sessions[dfm$start_time > '12:00:00']/2)
+dfm$num_sessions[dfm$start_time > '17:00:00'] <- ceiling(dfm$num_sessions[dfm$start_time > '17:00:00']/2)
+dfm$num_sessions[dfm$start_time > '12:00:00'][dfm$num_sessions[dfm$start_time > '12:00:00'] >= 8] <- 4
+
+
 # explode to session-level data
 N <- sum(dfm$num_sessions)
 
@@ -91,7 +99,9 @@ session_min_probs <- c(
     0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000626959
 )
 
-new_df$session_mins <- sample(x = 1:70, size = nrow(new_df), replace = TRUE, prob = session_min_probs)
+
+new_df$session_mins <- sample(x = seq(2, 140, by = 2)
+    , size = nrow(new_df), replace = TRUE, prob = session_min_probs)
 
 new_df$cumsum_mins <- ave(new_df$session_mins, new_df$date, FUN = cumsum)
 
@@ -108,15 +118,16 @@ new_df$end_datetime <- new_df$start_datetime + new_df$session_mins*60
 
 client_codes <- c(
     "MM", "NAT-C", "NAT-A", "NAT-B", "TR-La", "TR-Ma", "ACT"
-    , "BAR", "ZR", "X5", "CT-Y1", "CT-Y2", "G-TM", "G-AR"
+    , "BAR", "ZR", "X5", "CT-Y1", "CT-Y2", "G-TM", "G-AR", "BIZ"
 )
 
 client_codes_probs <- c(
-    0.07755, 0.05714, 0.04897, 0.02040, 0.01224, 0.02040, 0.13877, 
-    0.02448, 0.05306, 0.13061, 0.08979, 0.09387, 0.13877, 0.09395
+    0.0339, 0.0392, 0.2533, 0.0836, 0.0914, 0.0627, 0.0653, 0.0131, 
+    0.0261, 0.0261, 0.0183, 0.0731, 0.0888, 0.0151, 0.1100
 )
 
-new_df$client_code <- sample(x = client_codes, size = nrow(new_df), replace = TRUE, prob = client_codes_probs)
+new_df$client_code <- sample(x = client_codes,
+    size = nrow(new_df), replace = TRUE, prob = client_codes_probs)
 
 notes <- c(
     ""
@@ -166,7 +177,7 @@ terms <- c(
 
 types <- c(
     rep("flat rate", 2), "biz", "hourly", "flat rate", "hourly",
-    rep("flat rate", 6), "hourly", "flat_rate", "hourly"
+    rep("flat rate", 5), "hourly", "flat_rate", rep("hourly", 2)
 )
 
 rates <- c(
@@ -174,10 +185,10 @@ rates <- c(
 )
 
 codes_rates <- data.frame(
-    code = sort(c(client_codes, "BIZ"))
+    code = sort(client_codes)
     , term = terms
     , type = types
     , rate = rates
 )
 
-write.csv(codes_rates, "data/codes_rates.csv", row.names=FALSE)
+write.csv(codes_rates, "data/clients.csv", row.names=FALSE)
