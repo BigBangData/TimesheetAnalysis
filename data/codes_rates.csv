@@ -1,0 +1,16 @@
+"code","term","type","rate"
+"ACT","month","flat rate",200
+"BAR","quarter","flat rate",600
+"BIZ","biz","biz",0.01
+"CT-Y1","quarter","hourly",85
+"CT-Y2","quarter","flat rate",750
+"G-AR","month","hourly",85
+"G-TM","month","flat rate",300
+"MM","quarter","flat rate",550
+"NAT-A","month","flat rate",180
+"NAT-B","month","flat rate",220
+"NAT-C","month","flat rate",195
+"TR-La","quarter","flat rate",85
+"TR-Ma","quarter","hourly",500
+"X5","month","flat_rate",85
+"ZR","month","hourly",190
