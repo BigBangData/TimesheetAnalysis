@@ -2,7 +2,7 @@
 ## SETUP
 
  # uncomment to dev, comment to source
-# setwd("../GitHub/TimesheetAnalysis")
+setwd("../GitHub/TimesheetAnalysis/faking_data")
 
 # cleanup env
 rm(list=ls())
@@ -126,7 +126,7 @@ for (i in 1:nrow(dfd)) {
 
 # add session duration in minutes, depending on period of day
 # load probs
-sess <- read.csv("data/session_min_prob.csv")
+sess <- read.csv("session_min_prob.csv")
 
 n_morn <- nrow(dfs[dfs$day_period == "morning", ])
 n_aftn <- nrow(dfs[dfs$day_period == "afternoon", ])
@@ -247,28 +247,118 @@ dfs$clock_out <- substr(dfs$end_datetime, 12, 19)
 
 dfs <- dfs[, c("date", "clock_in", "clock_out", "client_code", "notes", "tags")]
 
+# SAVE
 write.csv(dfs, "data/timesheet.csv", row.names=FALSE)
 
-# fake code clients
-terms <- c(
-    "month", "quarter", "biz", rep("quarter", 2), rep("month" , 2),
-    "quarter", rep("month", 3), rep("quarter", 2), rep("month" , 2)
+########################################################################################
+# CLIENT DATA
+
+code <- c(
+    "AAPL"
+    , "AMZN"
+    , "BIZ"
+    , "BRK/A"
+    , "BRK/B"
+    , "CVX"
+    , "GOOG"
+    , "HD"
+    , "JNJ"
+    , "JPM"
+    , "MA"
+    , "META"
+    , "MSFT"
+    , "NVDA"
+    , "NVO"
+    , "PFE"
+    , "PG"
+    , "TSLA"
+    , "TSM"
+    , "UNH"
+    , "WMT"
+    , "XOM"
 )
 
-types <- c(
-    rep("flat rate", 2), "biz", "hourly", "flat rate", "hourly",
-    rep("flat rate", 5), "hourly", "flat_rate", rep("hourly", 2)
+term <- c(
+    "month"
+    ,"quarter"
+    ,"biz"
+    ,"month"
+    ,"month"
+    ,"quarter"
+    ,"quarter"
+    ,"month"
+    ,"month"
+    ,"month"
+    ,"quarter"
+    ,"quarter"
+    ,"quarter"
+    ,"month"
+    ,"month"
+    ,"month"
+    ,"month"
+    ,"quarter"
+    ,"quarter"
+    ,"quarter"
+    ,"month"
+    ,"month"
 )
 
-rates <- c(
-    400, 700, 0.01, 90, 750, 90, 320, 750, 380, 420, 350, 90, 660, 90, 420
+type <- c(
+    "flat rate"
+    , "flat rate"
+    , "biz"
+    , "hourly"
+    , "flat rate"
+    , "flat rate"
+    , "hourly"
+    , "hourly"
+    , "flat rate"
+    , "flat rate"
+    , "flat rate"
+    , "flat rate"
+    , "flat rate"
+    , "hourly"
+    , "flat rate"
+    , "flat rate"
+    , "hourly"
+    , "hourly"
+    , "flat rate"
+    , "flat rate"
+    , "hourly"
+    , "flat rate"
 )
 
-codes_rates <- data.frame(
-    code=sort(client_codes)
-    , term=terms
-    , type=types
-    , rate=rates
+rate <- c(
+    420.00
+    , 800.00
+    , 0.01
+    , 100.00
+    , 330.00
+    , 850.00
+    , 120.00
+    , 90.00
+    , 380.00
+    , 350.00
+    , 700.00
+    , 780.00
+    , 820.00
+    , 120.00
+    , 350.00
+    , 400.00
+    , 100.00
+    , 90.00
+    , 680.00
+    , 750.00
+    , 90.00
+    , 420.00
 )
 
-write.csv(codes_rates, "data/clients.csv", row.names=FALSE)
+clients <- data.frame(
+    code=code
+    , term=term
+    , type=type
+    , rate=rate
+)
+
+# SAVE
+write.csv(clients, "../data/clients.csv", row.names=FALSE)

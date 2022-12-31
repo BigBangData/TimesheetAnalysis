@@ -1,16 +1,23 @@
 "code","term","type","rate"
-"ACT","month","flat rate",400
-"BAR","quarter","flat rate",700
+"AAPL","month","flat rate",420
+"AMZN","quarter","flat rate",800
 "BIZ","biz","biz",0.01
-"CT-Y1","quarter","hourly",90
-"CT-Y2","quarter","flat rate",750
-"G-AR","month","hourly",90
-"G-TM","month","flat rate",320
-"MM","quarter","flat rate",750
-"NAT-A","month","flat rate",380
-"NAT-B","month","flat rate",420
-"NAT-C","month","flat rate",350
-"TR-La","quarter","hourly",90
-"TR-Ma","quarter","flat_rate",660
-"X5","month","hourly",90
-"ZR","month","hourly",420
+"BRK/A","month","hourly",100
+"BRK/B","month","flat rate",330
+"CVX","quarter","flat rate",850
+"GOOG","quarter","hourly",120
+"HD","month","hourly",90
+"JNJ","month","flat rate",380
+"JPM","month","flat rate",350
+"MA","quarter","flat rate",700
+"META","quarter","flat rate",780
+"MSFT","quarter","flat rate",820
+"NVDA","month","hourly",120
+"NVO","month","flat rate",350
+"PFE","month","flat rate",400
+"PG","month","hourly",100
+"TSLA","quarter","hourly",90
+"TSM","quarter","flat rate",680
+"UNH","quarter","flat rate",750
+"WMT","month","hourly",90
+"XOM","month","flat rate",420
