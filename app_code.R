@@ -1,11 +1,14 @@
 # TO DO:
-# fake data with BIZ hours
-# increase workload but careful not to go over midnight
-# might need more curated num sessions
+# fake data needs limit on work hours before midnight
+# separate faking the data from the actual data, both code and csv
 
 # fix for new year and leap year
 # do client code data validation
-# fix for variable rates per client
+
+# limitations:
+# no variable rates per client
+
+# current:
 # recreate and add to github and portfolio
 # fake data, different logo -> take pic of monty python clock!
 
@@ -33,7 +36,7 @@ pkgs <- c("dplyr", "DT", "ggplot2", "ggrepel", "lubridate", "shiny")
 suppressPackageStartupMessages(install_packages(pkgs))
 
 # To test in R:
-# setwd("../GitHub/TimesheetAnalysis")
+setwd("../GitHub/TimesheetAnalysis")
 
 # input <- data.frame(
 #     "report"="Monthly Hours"
@@ -62,17 +65,17 @@ tms$session_hs <- round(as.numeric(sub("secs", "", tms$end_time - tms$start_time
 
 # examine data to make sure ends of sessions are indeed before midnight
 # but also not before 6 AM
-# t <- tms 
-# d <- t %>%
-#     select(date, end_time) %>%
-#     group_by(date) %>%
-#     summarise(
-#         first_end = dplyr::first(end_time),
-#         last_end = dplyr::last(end_time)
-#     )
+t <- tms 
+d <- t %>%
+    select(date, end_time) %>%
+    group_by(date) %>%
+    summarise(
+        first_end = dplyr::first(end_time),
+        last_end = dplyr::last(end_time)
+    )
 
-# d[hour(d$last_end) == max(hour(d$last_end)), ]
-# d[hour(d$first_end) == min(hour(d$first_end)), ]
+d[hour(d$last_end) == max(hour(d$last_end)), ]
+d[hour(d$first_end) == min(hour(d$first_end)), ]
 
 
 
