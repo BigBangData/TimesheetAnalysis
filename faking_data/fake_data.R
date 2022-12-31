@@ -1,8 +1,8 @@
 ########################################################################################
 ## SETUP
 
- # uncomment to dev, comment to source
-setwd("../GitHub/TimesheetAnalysis/faking_data")
+# uncomment to dev, comment to source
+# setwd("../GitHub/TimesheetAnalysis/faking_data")
 
 # cleanup env
 rm(list=ls())
@@ -183,75 +183,10 @@ dd <- data.frame(
 dfs[hour(dfs$end_datetime) < 6, ]
 
 ## HERE HERE HERE
+# yes, confirmed that in the app those become negative hours worked
 
 ########################################################################################
 # CLIENT CODES
-
-
-client_codes <- c(
-    "MM", "NAT-C", "NAT-A", "NAT-B", "TR-La", "TR-Ma", "ACT"
-    , "BAR", "ZR", "X5", "CT-Y1", "CT-Y2", "G-TM", "G-AR", "BIZ"
-)
-
-client_codes_probs <- c(
-    0.0339, 0.0392, 0.2533, 0.0836, 0.0914, 0.0627, 0.0653, 0.0131, 
-    0.0261, 0.0261, 0.0183, 0.0731, 0.0888, 0.0151, 0.1100
-)
-
-set.seed(25)
-dfs$client_code <- sample(x=client_codes,
-    size=nrow(dfs), replace=TRUE, prob=client_codes_probs)
-
-notes <- c(
-    ""
-    , "emails"
-    , "setup books"
-    , "prep for mtg"
-    , "phone call"
-    , "balance sheets"
-    , "check last month's payments"
-    , "price quotes"
-    , "crosscheck w bank statements"
-    , "planning session"
-    , "discuss issues"
-)
-
-notes_probs <- c(
-    0.23513, 0.26279, 0.15214, 0.13278, 0.07746, 
-    0.03181, 0.03457, 0.02074, 0.02351, 0.01798, 0.01109
-)
-
-set.seed(25)
-dfs$notes <- sample(x=notes, size=nrow(dfs)
-    , replace=TRUE, prob=notes_probs)
-
-tags <- c(
-    ""
-    , "done"
-    , "redo"
-    , "asap"
-    , "fixed"
-)
-
-tags_probs <- c(0.50, 0.18, 0.14, 0.10, 0.08)
-
-set.seed(25)
-dfs$tags <- ifelse(
-    dfs$notes != ""
-    , sample(x=tags, size=nrow(dfs), replace=TRUE, prob=tags_probs)
-    , ""
-)
-
-dfs$clock_in <- substr(dfs$start_datetime, 12, 19)
-dfs$clock_out <- substr(dfs$end_datetime, 12, 19)
-
-dfs <- dfs[, c("date", "clock_in", "clock_out", "client_code", "notes", "tags")]
-
-# SAVE
-write.csv(dfs, "data/timesheet.csv", row.names=FALSE)
-
-########################################################################################
-# CLIENT DATA
 
 code <- c(
     "AAPL"
@@ -277,6 +212,92 @@ code <- c(
     , "WMT"
     , "XOM"
 )
+
+code_p <- c(
+    0.05
+    , 0.05
+    , 0.15
+    , 0.01
+    , 0.02
+    , 0.04
+    , 0.05
+    , 0.03
+    , 0.02
+    , 0.01
+    , 0.01
+    , 0.04
+    , 0.06
+    , 0.05
+    , 0.05
+    , 0.04
+    , 0.06
+    , 0.08
+    , 0.04
+    , 0.03
+    , 0.07
+    , 0.04
+)
+
+set.seed(23487)
+dfs$code <- sample(x=code, size=nrow(dfs), replace=TRUE, prob=code_p)
+
+notes <- c(
+    ""
+    , "emails"
+    , "setup books"
+    , "prep for mtg"
+    , "phone call"
+    , "balance sheets"
+    , "check last month's payments"
+    , "price quotes"
+    , "crosscheck w bank statements"
+    , "planning session"
+    , "discuss issues"
+)
+
+notes_p <- c(
+    0.23513
+    , 0.26279
+    , 0.15214
+    , 0.13278
+    , 0.07746
+    , 0.03181
+    , 0.03457
+    , 0.02074
+    , 0.02351
+    , 0.01798
+    , 0.01109
+)
+
+set.seed(25)
+dfs$notes <- sample(x=notes, size=nrow(dfs), replace=TRUE, prob=notes_p)
+
+tags <- c(
+    ""
+    , "done"
+    , "redo"
+    , "asap"
+    , "fixed"
+)
+
+tags_p <- c(0.50, 0.18, 0.14, 0.10, 0.08)
+
+set.seed(234595)
+dfs$tags <- ifelse(dfs$notes != ""
+    , sample(x=tags, size=nrow(dfs), replace=TRUE, prob=tags_p)
+    , ""
+)
+
+dfs$clock_in <- substr(dfs$start_datetime, 12, 19)
+dfs$clock_out <- substr(dfs$end_datetime, 12, 19)
+
+tms <- dfs[, c("date", "clock_in", "clock_out", "code", "notes", "tags")]
+
+# SAVE
+write.csv(tms, "../data/timesheet.csv", row.names=FALSE)
+
+########################################################################################
+# CLIENT DATA
 
 term <- c(
     "month"
