@@ -1,14 +1,13 @@
 # TO DO:
 # fix for new year and leap year
-# do client code data validation
+# README
+# deploy
+# add to portfolio
 
 # limitations:
 # no variable rates per client
 # certain plots only work given certain restrictions
 
-# current:
-# recreate and add to github and portfolio
-# fake data, different logo -> take pic of monty python clock!
 
 # Setup
 # -------
@@ -47,12 +46,25 @@ suppressPackageStartupMessages(install_packages(pkgs))
 
 # Load data
 # ---------
-
 na_strings <- c("", "-", "NA", "N/A", "#N/A", "NULL", "Null", "null")
 tms <- read.csv("data/timesheet.csv", na.strings = na_strings)
 rts <- read.csv("data/clients.csv", na.strings = na_strings)
 
+# fail fast: check for nonexistent (aka "new") client codes in timesheet
+tms_codes <- unique(tms$code)
+new_codes <- tms_codes[!tms_codes %in% rts$code]
+
+if (length(new_codes) > 0) {
+    err <- paste(
+        "Found new codes in the timesheet."
+        , paste0("Add ", new_codes, " to client codes first.")
+        , sep = "\n"
+    )
+    stop(err)
+}
+
 # fix data types
+# Note: do not edit CSVs in Excel
 tms$date <- as.Date(tms$date, format="%Y-%m-%d")
 # calculate start and end times for sessions
 # if they're before 6 AM (official start of a day), that's a wrap up of a previous day
@@ -111,7 +123,6 @@ rts$code <- toupper(rts$code)
 rts <- na.omit(rts)
 
 # merge
-# TO DO: more checking of client codes
 mm <- merge(tms, rts, by.x="code", by.y="code")
 mm$rate <- as.numeric(mm$rate)
 mm <- mm[order(mm$start_time), ]
@@ -121,6 +132,8 @@ row.names(mm) <- 1:nrow(mm)
 mm <- mm[, c('code', 'date', 'session_hs', 'notes', 'tags', 'type', 'term', 'rate')]
 
 # add missing dates
+# Note: this will fail if CSV is edited in Excel
+# since date formats will be wrong and all dates will be NA
 #mm <- mm[as.character(mm$date) %in% c('2022-10-01', '2022-10-03', '2022-10-05'), ]
 date_spine <- seq(from=as.Date(min(mm$date)), to=as.Date(max(mm$date)), by=1)
 
@@ -654,7 +667,7 @@ plot_hours_barplot <- function(dfm, total_row, xaxis, title) {
     return(g)
 }
 
-plot_client_scatter <- function(dfm, title) {
+plot_client_scatter <- function(dfm, total_row, title) {
     # create color
     qt25 <- round(quantile(dfm$tot_hs)[[2]], 2)
     qt75 <- round(quantile(dfm$tot_hs)[[4]], 2)
@@ -662,12 +675,18 @@ plot_client_scatter <- function(dfm, title) {
                     , ifelse(dfm$tot_hs <= qt75, '#063970' # blue
                     , '#C02403')) # red
     mean_hs <- round(mean(dfm$tot_hs), 1)
-    # prep base scatterplot + avg line for desired hourly rate
+    # prep base scatterplot + avg line for mean hourly rate
     g <- ggplot(dfm, aes(x=avg_hourly_rate, y=rate)) +
             geom_point(color = 'red') +
             theme_classic(base_size = 16) +
-            geom_vline(xintercept = 65
+            geom_vline(xintercept = total_row$avg_hourly_rate
                 , col = "black", linetype = "dotted", size = 1.2)
+            # avoid, text may conflict with data point labels
+            # annotate("text"
+            #     , x=total_row$avg_hourly_rate - max(dfm$avg_hourly_rate)/50
+            #     , y=max(dfm$rate) *.75
+            #     , label=paste0("Avg. Rate ($", total_row$avg_hourly_rate, ")")
+            #     , angle=90, size=6, color="black")
     # plot out with labels that repel
     g <- g +
         geom_label_repel(aes(label = code)
@@ -678,7 +697,8 @@ plot_client_scatter <- function(dfm, title) {
             subtitle = paste0(
                 "Avg. Hours Worked: ", mean_hs, " hs"
                 , " | Red = above 75% quantile: ", qt75, " hs"
-                , " | Green = below 25% quantile: ", qt25, " hs")) +
+                , " | Green = below 25% quantile: ", qt25, " hs"
+                , " | Avg. Rate: $", total_row$avg_hourly_rate)) +
         labs(x = "Avg. Hourly Rate ($)", y = "Revenue ($)") +
         theme(plot.title = element_text(size = 22)
             , plot.subtitle = element_text(size = 18)
@@ -705,10 +725,10 @@ return_plot <- function(dfm_with_totals, input, reports) {
         p <- plot_hours_barplot(dfm, total_row, xaxis=quarter, title=reports[5])
     # Monthly Clients
     } else if (input$report == reports[6]) {
-        p <- plot_client_scatter(dfm, title=reports[6])
+        p <- plot_client_scatter(dfm, total_row, title=reports[6])
     # Quarterly Clients
     } else if (input$report == reports[7]) {
-        p <- plot_client_scatter(dfm, title=reports[7])
+        p <- plot_client_scatter(dfm, total_row, title=reports[7])
     # Month Report
     } else if (input$report == reports[8]) {
         p <- plot_barline(dfm, total_row, xaxis=month, title=reports[8])

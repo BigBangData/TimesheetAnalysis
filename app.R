@@ -8,9 +8,9 @@ tabPanelfooter <- fluidRow(
     column(width = 12,
         # signature, GitHub link
         p(style = "text-align:right;",
-        "App by: ", tags$a(href="https://bigbangdata.github.io/", "Marcelo Sanches"),
-        tags$a(href="https://bigbangdata.github.io/",
-        img(src="GitHub-Mark-32px.png", height = 20)), " BigBangData")
+        tags$a(href="https://bigbangdata.github.io/", "Marcelo Sanches"),
+        tags$a(href="https://github.com/BigBangData/TimesheetAnalysis",
+        img(src="GitHub-Mark-32px.png", height = 20), " BigBangData"))
     )
 )
 
@@ -18,7 +18,7 @@ tabPanelfooter <- fluidRow(
 ui <- navbarPage(
     title = div(
         style = "color:#430E8A; text-align: left; font-size: 22px; font-weight: 600",
-        tags$a(href="https://www.jennifersbookkeeping.com/", img(src="JB_logo_500width.png", height = 35, width = 48)),
+        tags$a(href="https://www.time.gov/", img(src="monty.png", height = 50, width = 50)),
         "Timesheet Analysis"
     ),
     tabPanel(title = "Data Table",
