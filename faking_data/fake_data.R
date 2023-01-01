@@ -2,7 +2,7 @@
 ## SETUP
 
 # uncomment to dev, comment to source
-# setwd("../GitHub/TimesheetAnalysis/faking_data")
+setwd("../GitHub/TimesheetAnalysis/faking_data")
 
 # cleanup env
 rm(list=ls())
@@ -181,6 +181,8 @@ dd <- data.frame(
 
 # problematic days
 dfs[hour(dfs$end_datetime) < 6, ]
+
+dfs[dfs$date != substr(dfs$start_datetime, 1, 10), ]
 
 ## HERE HERE HERE
 # yes, confirmed that in the app those become negative hours worked

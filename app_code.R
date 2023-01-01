@@ -1,12 +1,10 @@
 # TO DO:
-# fake data needs limit on work hours before midnight
-# separate faking the data from the actual data, both code and csv
-
 # fix for new year and leap year
 # do client code data validation
 
 # limitations:
 # no variable rates per client
+# certain plots only work given certain restrictions
 
 # current:
 # recreate and add to github and portfolio
@@ -57,15 +55,37 @@ rts <- read.csv("data/clients.csv", na.strings = na_strings)
 # fix data types
 tms$date <- as.Date(tms$date, format="%Y-%m-%d")
 # calculate start and end times for sessions
-tms$start_time <- strptime(paste0(tms$date, ' ', tms$clock_in), "%Y-%m-%d %H:%M:%S")
-tms$end_time <- strptime(paste0(tms$date, ' ', tms$clock_out), "%Y-%m-%d %H:%M:%S")
+# if they're before 6 AM (official start of a day), that's a wrap up of a previous day
+# so calculate those as date = previous day but start_time/end_time = new day
+tms$start_time <- rep(as.POSIXlt(strptime("2022-01-01 00:00:01", "%Y-%m-%d %H:%M:%S")), nrow(tms))
+
+for (i in 1:nrow(tms)) {
+    if (tms$clock_in[i] < "06:00:00") {
+        tms$start_time[i] <- strptime(paste0(tms$date[i] +1, ' ', tms$clock_in[i]), "%Y-%m-%d %H:%M:%S")
+    } else {
+        tms$start_time[i] <- strptime(paste0(tms$date[i], ' ', tms$clock_in[i]), "%Y-%m-%d %H:%M:%S")
+    }
+}
+
+tms$end_time <- rep(as.POSIXlt(strptime("2022-01-01 00:00:01", "%Y-%m-%d %H:%M:%S")), nrow(tms))
+
+for (i in 1:nrow(tms)) {
+    if (tms$clock_out[i] < "06:00:00") {
+        tms$end_time[i] <- strptime(paste0(tms$date[i] +1, ' ', tms$clock_out[i]), "%Y-%m-%d %H:%M:%S")
+    } else {
+        tms$end_time[i] <- strptime(paste0(tms$date[i], ' ', tms$clock_out[i]), "%Y-%m-%d %H:%M:%S")
+    }
+}
+
 # calculate session duration in hours
 tms$session_hs <- round(as.numeric(sub("secs", "", tms$end_time - tms$start_time))/60, 2)
 
-# examine data to make sure ends of sessions are indeed before midnight
-# but also not before 6 AM
-# t <- tms 
-# d <- t %>%
+# # examine data to make sure ends of sessions are indeed before midnight and not before 6am
+# tms[tms$clock_out < '06:00:00', ]
+# tms[tms$clock_in < '06:00:00', ]
+# tms[tms$date != substr(tms$start_time, 1, 10), ]
+
+# dd <- tms %>%
 #     select(date, end_time) %>%
 #     group_by(date) %>%
 #     summarise(
@@ -75,7 +95,6 @@ tms$session_hs <- round(as.numeric(sub("secs", "", tms$end_time - tms$start_time
 
 # d[hour(d$last_end) == max(hour(d$last_end)), ]
 # d[hour(d$first_end) == min(hour(d$first_end)), ]
-
 
 tms <- apply(tms, 2, function(x) trimws(x))
 tms <- data.frame(tms, stringsAsFactors = FALSE)
