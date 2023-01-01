@@ -1,9 +1,6 @@
-
 source("app_code.R")
 
-## UI
-# ----
-
+# ui
 tabPanelfooter <- fluidRow(
     column(width = 12,
         # signature, GitHub link
@@ -14,14 +11,13 @@ tabPanelfooter <- fluidRow(
     )
 )
 
-
 ui <- navbarPage(
     title = div(
         style = "color:#430E8A; text-align: left; font-size: 22px; font-weight: 600",
         tags$a(href="https://www.time.gov/", img(src="monty.png", height = 50, width = 50)),
         "Timesheet Analysis"
     ),
-    tabPanel(title = "Data Table",
+    tabPanel(title = "Data Viz",
         sidebarLayout(position = "left",
             sidebarPanel(width = 2,
                 # drop-down for report
@@ -29,9 +25,8 @@ ui <- navbarPage(
                     inputId = "report",
                     label = "Report",
                     choices = reports,
-                    selected = reports[1]
+                    selected = reports[6]
                 ),
-                downloadButton("download_csv", label = "Download Data"),
                 tags$style(HTML("hr {border-top: 1px solid #000000;}")),
                 hr(),
                 # slider for year
@@ -40,7 +35,7 @@ ui <- navbarPage(
                     label = "Year",
                     min = as.integer(substr(min(mm$date), 1, 4)),
                     max = as.integer(substr(max(mm$date), 1, 4)),
-                    value = as.integer(substr(min(mm$date), 1, 4)),
+                    value = "2022",
                     sep = "",
                     step = 1,
                     ticks = TRUE
@@ -50,7 +45,7 @@ ui <- navbarPage(
                     inputId = "quarter",
                     label = "Quarter",
                     choices = c("All", "1", "2", "3", "4"),
-                    selected = "All",
+                    selected = "4",
                     inline = TRUE
                 ),
                 # select month
@@ -58,23 +53,23 @@ ui <- navbarPage(
                     inputId = "month",
                     label = "Month",
                     choices = c("All", month_list),
-                    selected = "All"
+                    selected = "10"
                 ),
                 # start date
                 dateInput(
                     inputId = "start_date", 
                     label = "Start Date", 
-                    value = min(mm$date),
                     min = min(mm$date),
-                    max = max(mm$date)
+                    max = max(mm$date),
+                    value = "2022-10-01"
                 ),
                 # end date
                 dateInput(
                     inputId = "end_date", 
                     label = "End Date", 
-                    value = max(mm$date),
                     min = min(mm$date),
-                    max = max(mm$date)
+                    max = max(mm$date),
+                    value = "2022-10-31"
                 ),
                 hr(),
                 # checkbox for term
@@ -82,7 +77,7 @@ ui <- navbarPage(
                     inputId = "term",
                     label = "Term",
                     choices = c("month", "quarter", "biz"),
-                    selected = c("month", "quarter", "biz"),
+                    selected = "month",
                     inline = TRUE
                 ),
                 # select client groups
@@ -90,7 +85,7 @@ ui <- navbarPage(
                     inputId = "client_group",
                     label = "Client Group",
                     choices = client_groups,
-                    selected = client_groups[1],
+                    selected = "month",
                     inline = TRUE
                 ),
                 # checkbox for client code
@@ -98,21 +93,22 @@ ui <- navbarPage(
                     inputId = "client_code",
                     label = "Client Code",
                     choices = c("All", rts$code),
-                    selected = "All"
+                    selected = rts$code[rts$term == "month"]
                 )
             ),
             mainPanel(width = 10,
-                DTOutput("tbl", width="100%", height="auto"),
+                plotOutput("viz", width="100%", height="800px"),
                 br(),
                 tabPanelfooter
             )
         )
     ),
-
-    tabPanel(title = "Plots",
+    tabPanel(title = "Data Tab",
         sidebarLayout(position = "left",
             sidebarPanel(width = 2,
-                downloadButton("download_plot", label = "Download Plot"),
+                downloadButton("download_csv", label = "Download Table"),
+                hr(),
+                downloadButton("download_plot", label = "Download Viz"),
                 hr(),
                 # select height
                 selectInput(
@@ -137,7 +133,7 @@ ui <- navbarPage(
                 )
             ),
             mainPanel(width = 10,
-                plotOutput("plot", width="100%", height="800px"),
+                DTOutput("tab", width="100%", height="auto"),
                 br(),
                 tabPanelfooter
             )
@@ -145,18 +141,12 @@ ui <- navbarPage(
     )
 )
 
-## Server
-# -------
-
+# server
 server <- function(input, output, session) {
-
+    # year slider udpates available dates
     observe({
-
-        # year slider affects dates available
         beg_selected <- min(mm$date[year(mm$date) == input$year])
         end_selected <- max(mm$date[year(mm$date) == input$year])
-
-        # updates dates filters
         updateDateInput(
             session
             , "start_date"
@@ -174,15 +164,11 @@ server <- function(input, output, session) {
             , max = end_selected
         )
     })
-
+    # quarter filter updates availble dates
     observe({
-
-        # quarter filter selects dates
-        beg_selected <- min(mm$date[year(mm$date) == input$year])
-        end_selected <- max(mm$date[year(mm$date) == input$year])
-
         year <- input$year
-
+        beg_selected <- min(mm$date[year(mm$date) == year])
+        end_selected <- max(mm$date[year(mm$date) == year])
         # needs to be radio buttons
         if ("1" == input$quarter) {
             beg_selected <- c(paste0(year, '-01-01'))
@@ -204,8 +190,6 @@ server <- function(input, output, session) {
             beg_selected <- beg_selected
             end_selected <- end_selected
         }
-
-        # updates dates filters
         updateDateInput(
             session
             , "start_date"
@@ -223,23 +207,18 @@ server <- function(input, output, session) {
             , max = end_selected
         )
     })
-
+    # month filter updates available dates independently
     observe({
-
-        # month filter selects dates
-        beg_selected <- min(mm$date[year(mm$date) == input$year])
-        end_selected <- max(mm$date[year(mm$date) == input$year])
-
         year <- input$year
-        year_int <- as.numeric(year)
-
+        beg_selected <- min(mm$date[year(mm$date) == year])
+        end_selected <- max(mm$date[year(mm$date) == year])
         if (input$month %in% c("04", "06", "09", "11")) {
             beg_selected <- c(paste0(year, '-', input$month, '-01'))
             end_selected <- c(paste0(year, '-', input$month, '-30'))
         } else if (input$month == "02") {
             beg_selected <- c(paste0(year, '-', input$month, '-01'))
             # account for leap years
-            if (year_int %% 4 != 0) {
+            if (as.numeric(year) %% 4 != 0) {
                 end_selected <- c(paste0(year, '-', input$month, '-28'))
             } else {
                 end_selected <- c(paste0(year, '-', input$month, '-29'))
@@ -251,8 +230,6 @@ server <- function(input, output, session) {
             beg_selected <- c(paste0(year, '-', input$month, '-01'))
             end_selected <- c(paste0(year, '-', input$month, '-31'))
         }
-
-        # updates dates filters
         updateDateInput(
             session
             , "start_date"
@@ -270,14 +247,10 @@ server <- function(input, output, session) {
             , max = end_selected
         )
     })
-
+    # client group filter to select client codes
     observe({
-
-        # client group filter to select client codes
-        # must initialize at session in case all are unchecked (app fails)
         choices <- c(rts$code)
         selected <- c()
-
         # cannot use 'else' since it skips eval; still evals in order
         # works for radio buttons AND checkboxes with %in%
         if (client_groups[1] %in% input$client_group) {
@@ -298,8 +271,6 @@ server <- function(input, output, session) {
         if (client_groups[6] %in% input$client_group) {
             selected <- c(rts$code[rts$type == "hourly"])
         }
-
-        # updates client code filter
         updateCheckboxGroupInput(
             session
             , "client_code"
@@ -308,11 +279,9 @@ server <- function(input, output, session) {
             , selected = selected
         )
     })
-
-    output$tbl <- renderDT({
-
+    # data table
+    output$tab <- renderDT({
         dfm <- return_dfm(input, reports)
-
         # config table object
         table_obj <- DT::datatable(
             dfm
@@ -322,7 +291,6 @@ server <- function(input, output, session) {
                 , pageLength = -1
             )
         )
-
         # Format table
         # proxy condition for: Sessions
         if ('session_hs' %in% colnames(dfm)) {
@@ -348,15 +316,12 @@ server <- function(input, output, session) {
         }
         return(out)
     })
-
-
-    output$plot <- renderPlot({
-
+    # data viz
+    output$viz <- renderPlot({
         dfm_with_totals <- return_dfm(input, reports)
         return_plot(dfm_with_totals, input, reports)
-
     })
-
+    # download csv
     output$download_csv <- downloadHandler(
         filename = function() {
             paste0(input$report, " ", Sys.Date(), ".csv", sep="")
@@ -365,9 +330,8 @@ server <- function(input, output, session) {
             write.csv(return_dfm(input, reports), file, row.names=FALSE)
         }
     )
-
+    # download viz
     output$download_plot <- downloadHandler(
-
         filename = function() { 
             paste(input$report, " ", Sys.Date(), ".png", sep="")
         }
@@ -383,9 +347,7 @@ server <- function(input, output, session) {
             )
         }
     )
-
 }
-
 
 # run app
 shinyApp(ui = ui, server = server)
