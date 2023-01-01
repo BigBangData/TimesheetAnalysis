@@ -2,7 +2,7 @@
 ## SETUP
 
 # uncomment to dev, comment to source
-setwd("../GitHub/TimesheetAnalysis/faking_data")
+# setwd("../GitHub/TimesheetAnalysis/faking_data")
 
 # cleanup env
 rm(list=ls())
@@ -23,8 +23,11 @@ suppressPackageStartupMessages(install_packages(pkgs))
 
 # creata a dfd (data frame at the day level) of dates worked
 set.seed(123)
-binomial_mask <- rbinom(365, 1, 2/7)
-date_spine <- seq(from=as.Date('2022-01-01'), to=as.Date('2022-12-31'), by=1)
+year <- 2022
+num_days <- ifelse(year %% 4 != 0, 365, 366)
+binomial_mask <- rbinom(num_days, 1, 0.3) # a bit more than weekends off
+date_spine <- seq(from=as.Date(paste0(year, '-01-01'), "%Y-%m-%d")
+    , to=as.Date(paste0(year, '-12-31'), "%Y-%m-%d"), by=1)
 dfd <- data.frame(
     date=as.Date(date_spine)
     , day_out=binomial_mask

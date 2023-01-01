@@ -234,12 +234,19 @@ server <- function(input, output, session) {
 
         # solution for latest year only
         max_year <- max(as.character(mm$year))
+        max_year_int <- as.numeric(max_year)
+
         if (input$month %in% c("04", "06", "09", "11")) {
             beg_selected <- c(paste0(max_year, '-', input$month, '-01'))
             end_selected <- c(paste0(max_year, '-', input$month, '-30'))
         } else if (input$month == "02") {
             beg_selected <- c(paste0(max_year, '-', input$month, '-01'))
-            end_selected <- c(paste0(max_year, '-', input$month, '-28')) # needs leap year solution
+            # account for leap years
+            if (max_year_int %% 4 != 0) {
+                end_selected <- c(paste0(max_year, '-', input$month, '-28'))
+            } else {
+                end_selected <- c(paste0(max_year, '-', input$month, '-29'))
+            }
         } else if (input$month == "All") {
             beg_selected <- beg_selected
             end_selected <- end_selected
