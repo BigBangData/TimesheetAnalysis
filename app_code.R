@@ -1,12 +1,10 @@
 # TO DO:
-# fix for new year
-# README
-# deploy
+# rethink plot vs data first
+# redo msg for no plots
+# add restrictions for each plots in footer
+# create README, note limitations (no variable rates)
+# deploy app
 # add to portfolio
-
-# limitations:
-# no variable rates per client
-# certain plots only work given certain restrictions
 
 
 # Setup

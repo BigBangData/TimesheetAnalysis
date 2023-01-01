@@ -45,14 +45,6 @@ ui <- navbarPage(
                     step = 1,
                     ticks = TRUE
                 ),
-                # checkbox for term
-                checkboxGroupInput(
-                    inputId = "term",
-                    label = "Term",
-                    choices = c("month", "quarter", "biz"),
-                    selected = c("month", "quarter", "biz"),
-                    inline = TRUE
-                ),
                 # select quarter
                 radioButtons(
                     inputId = "quarter",
@@ -164,10 +156,6 @@ server <- function(input, output, session) {
         beg_selected <- min(mm$date[year(mm$date) == input$year])
         end_selected <- max(mm$date[year(mm$date) == input$year])
 
-        # print(input$year)
-        # print(year(mm$date[1]))
-        # print(beg_selected)
-
         # updates dates filters
         updateDateInput(
             session
@@ -190,8 +178,8 @@ server <- function(input, output, session) {
     observe({
 
         # quarter filter selects dates
-        beg_selected <- min(mm$date)
-        end_selected <- max(mm$date)
+        beg_selected <- min(mm$date[year(mm$date) == input$year])
+        end_selected <- max(mm$date[year(mm$date) == input$year])
 
         year <- input$year
 
@@ -239,8 +227,8 @@ server <- function(input, output, session) {
     observe({
 
         # month filter selects dates
-        beg_selected <- min(mm$date)
-        end_selected <- max(mm$date)
+        beg_selected <- min(mm$date[year(mm$date) == input$year])
+        end_selected <- max(mm$date[year(mm$date) == input$year])
 
         year <- input$year
         year_int <- as.numeric(year)

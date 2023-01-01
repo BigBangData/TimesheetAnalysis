@@ -23,7 +23,7 @@ suppressPackageStartupMessages(install_packages(pkgs))
 
 # creata a dfd (data frame at the day level) of dates worked
 set.seed(123)
-year_start <- 2022
+year_start <- 2020
 year_end <- 2023
 
 if (year_start != year_end) {
