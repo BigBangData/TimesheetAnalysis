@@ -1,5 +1,5 @@
 # TO DO:
-# fix for new year and leap year
+# fix for new year
 # README
 # deploy
 # add to portfolio

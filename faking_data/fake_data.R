@@ -23,11 +23,25 @@ suppressPackageStartupMessages(install_packages(pkgs))
 
 # creata a dfd (data frame at the day level) of dates worked
 set.seed(123)
-year <- 2022
-num_days <- ifelse(year %% 4 != 0, 365, 366)
-binomial_mask <- rbinom(num_days, 1, 0.3) # a bit more than weekends off
-date_spine <- seq(from=as.Date(paste0(year, '-01-01'), "%Y-%m-%d")
-    , to=as.Date(paste0(year, '-12-31'), "%Y-%m-%d"), by=1)
+year_start <- 2022
+year_end <- 2023
+
+if (year_start != year_end) {
+    tot_num_days <- 0
+    for (year in year_start:year_end) {
+        num_days <- ifelse(year %% 4 != 0, 365, 366)
+        tot_num_days <- tot_num_days +num_days
+    }
+} else {
+    tot_num_days <- ifelse(year_start %% 4 != 0, 365, 366)
+}
+
+binomial_mask <- rbinom(tot_num_days, 1, 0.3) # a bit more than weekends off
+date_spine <- seq(
+    from=as.Date(paste0(year_start, '-01-01'), "%Y-%m-%d")
+    , to=as.Date(paste0(year_end, '-12-31'), "%Y-%m-%d")
+    , by=1
+)
 dfd <- data.frame(
     date=as.Date(date_spine)
     , day_out=binomial_mask

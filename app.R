@@ -34,6 +34,17 @@ ui <- navbarPage(
                 downloadButton("download_csv", label = "Download Data"),
                 tags$style(HTML("hr {border-top: 1px solid #000000;}")),
                 hr(),
+                # slider for year
+                sliderInput(
+                    inputId = "year",
+                    label = "Year",
+                    min = as.integer(substr(min(mm$date), 1, 4)),
+                    max = as.integer(substr(max(mm$date), 1, 4)),
+                    value = as.integer(substr(min(mm$date), 1, 4)),
+                    sep = "",
+                    step = 1,
+                    ticks = TRUE
+                ),
                 # checkbox for term
                 checkboxGroupInput(
                     inputId = "term",
@@ -41,6 +52,21 @@ ui <- navbarPage(
                     choices = c("month", "quarter", "biz"),
                     selected = c("month", "quarter", "biz"),
                     inline = TRUE
+                ),
+                # select quarter
+                radioButtons(
+                    inputId = "quarter",
+                    label = "Quarter",
+                    choices = c("All", "1", "2", "3", "4"),
+                    selected = "All",
+                    inline = TRUE
+                ),
+                # select month
+                selectInput(
+                    inputId = "month",
+                    label = "Month",
+                    choices = c("All", month_list),
+                    selected = "All"
                 ),
                 # start date
                 dateInput(
@@ -58,20 +84,14 @@ ui <- navbarPage(
                     min = min(mm$date),
                     max = max(mm$date)
                 ),
-                # select quarter
-                radioButtons(
-                    inputId = "quarter",
-                    label = "Quarter",
-                    choices = c("All", "1", "2", "3", "4"),
-                    selected = "All",
+                hr(),
+                # checkbox for term
+                checkboxGroupInput(
+                    inputId = "term",
+                    label = "Term",
+                    choices = c("month", "quarter", "biz"),
+                    selected = c("month", "quarter", "biz"),
                     inline = TRUE
-                ),
-                # select month
-                selectInput(
-                    inputId = "month",
-                    label = "Month",
-                    choices = c("All", month_list),
-                    selected = "All"
                 ),
                 # select client groups
                 radioButtons(
@@ -138,7 +158,131 @@ ui <- navbarPage(
 
 server <- function(input, output, session) {
 
-    # separate observations else selecting a client group affects quarter picker
+    observe({
+
+        # year slider affects dates available
+        beg_selected <- min(mm$date[year(mm$date) == input$year])
+        end_selected <- max(mm$date[year(mm$date) == input$year])
+
+        # print(input$year)
+        # print(year(mm$date[1]))
+        # print(beg_selected)
+
+        # updates dates filters
+        updateDateInput(
+            session
+            , "start_date"
+            , label = paste("Start Date")
+            , value = beg_selected
+            , min = beg_selected
+            , max = end_selected
+        )
+        updateDateInput(
+            session
+            , "end_date"
+            , label = paste("End Date")
+            , value = end_selected
+            , min = beg_selected
+            , max = end_selected
+        )
+    })
+
+    observe({
+
+        # quarter filter selects dates
+        beg_selected <- min(mm$date)
+        end_selected <- max(mm$date)
+
+        year <- input$year
+
+        # needs to be radio buttons
+        if ("1" == input$quarter) {
+            beg_selected <- c(paste0(year, '-01-01'))
+            end_selected <- c(paste0(year, '-03-31'))
+        }
+        if ("2" == input$quarter) {
+            beg_selected <- c(paste0(year, '-04-01'))
+            end_selected <- c(paste0(year, '-06-30'))
+        }
+        if ("3" == input$quarter) {
+            beg_selected <- c(paste0(year, '-07-01'))
+            end_selected <- c(paste0(year, '-09-30'))
+        }
+        if ("4" == input$quarter) {
+            beg_selected <- c(paste0(year, '-10-01'))
+            end_selected <- c(paste0(year, '-12-31'))
+        }
+        if ("All" == input$quarter) {
+            beg_selected <- beg_selected
+            end_selected <- end_selected
+        }
+
+        # updates dates filters
+        updateDateInput(
+            session
+            , "start_date"
+            , label = paste("Start Date")
+            , value = beg_selected
+            , min = beg_selected
+            , max = end_selected
+        )
+        updateDateInput(
+            session
+            , "end_date"
+            , label = paste("End Date")
+            , value = end_selected
+            , min = beg_selected
+            , max = end_selected
+        )
+    })
+
+    observe({
+
+        # month filter selects dates
+        beg_selected <- min(mm$date)
+        end_selected <- max(mm$date)
+
+        year <- input$year
+        year_int <- as.numeric(year)
+
+        if (input$month %in% c("04", "06", "09", "11")) {
+            beg_selected <- c(paste0(year, '-', input$month, '-01'))
+            end_selected <- c(paste0(year, '-', input$month, '-30'))
+        } else if (input$month == "02") {
+            beg_selected <- c(paste0(year, '-', input$month, '-01'))
+            # account for leap years
+            if (year_int %% 4 != 0) {
+                end_selected <- c(paste0(year, '-', input$month, '-28'))
+            } else {
+                end_selected <- c(paste0(year, '-', input$month, '-29'))
+            }
+        } else if (input$month == "All") {
+            beg_selected <- beg_selected
+            end_selected <- end_selected
+        } else {
+            beg_selected <- c(paste0(year, '-', input$month, '-01'))
+            end_selected <- c(paste0(year, '-', input$month, '-31'))
+        }
+
+        # updates dates filters
+        updateDateInput(
+            session
+            , "start_date"
+            , label = paste("Start Date")
+            , value = beg_selected
+            , min = beg_selected
+            , max = end_selected
+        )
+        updateDateInput(
+            session
+            , "end_date"
+            , label = paste("End Date")
+            , value = end_selected
+            , min = beg_selected
+            , max = end_selected
+        )
+    })
+
     observe({
 
         # client group filter to select client codes
@@ -176,104 +320,6 @@ server <- function(input, output, session) {
             , selected = selected
         )
     })
-
-    observe({
-
-        # quarter filter selects dates
-        beg_selected <- min(mm$date)
-        end_selected <- max(mm$date)
-        # solution for latest year only
-        max_year <- max(as.character(mm$year))
-
-        # needs to be radio buttons
-        if ("1" == input$quarter) {
-            beg_selected <- c(paste0(max_year, '-01-01'))
-            end_selected <- c(paste0(max_year, '-03-31'))
-        }
-        if ("2" == input$quarter) {
-            beg_selected <- c(paste0(max_year, '-04-01'))
-            end_selected <- c(paste0(max_year, '-06-30'))
-        }
-        if ("3" == input$quarter) {
-            beg_selected <- c(paste0(max_year, '-07-01'))
-            end_selected <- c(paste0(max_year, '-09-30'))
-        }
-        if ("4" == input$quarter) {
-            beg_selected <- c(paste0(max_year, '-10-01'))
-            end_selected <- c(paste0(max_year, '-12-31'))
-        }
-        if ("All" == input$quarter) {
-            beg_selected <- beg_selected
-            end_selected <- end_selected
-        }
-
-        # updates dates filters
-        updateDateInput(
-            session
-            , "start_date"
-            , label = paste("Start Date")
-            , value = beg_selected
-            , min = beg_selected
-            , max = end_selected
-        )
-        updateDateInput(
-            session
-            , "end_date"
-            , label = paste("End Date")
-            , value = end_selected
-            , min = beg_selected
-            , max = end_selected
-        )
-    })
-
-    observe({
-
-        # month filter selects dates
-        beg_selected <- min(mm$date)
-        end_selected <- max(mm$date)
-
-        # solution for latest year only
-        max_year <- max(as.character(mm$year))
-        max_year_int <- as.numeric(max_year)
-
-        if (input$month %in% c("04", "06", "09", "11")) {
-            beg_selected <- c(paste0(max_year, '-', input$month, '-01'))
-            end_selected <- c(paste0(max_year, '-', input$month, '-30'))
-        } else if (input$month == "02") {
-            beg_selected <- c(paste0(max_year, '-', input$month, '-01'))
-            # account for leap years
-            if (max_year_int %% 4 != 0) {
-                end_selected <- c(paste0(max_year, '-', input$month, '-28'))
-            } else {
-                end_selected <- c(paste0(max_year, '-', input$month, '-29'))
-            }
-        } else if (input$month == "All") {
-            beg_selected <- beg_selected
-            end_selected <- end_selected
-        } else {
-            beg_selected <- c(paste0(max_year, '-', input$month, '-01'))
-            end_selected <- c(paste0(max_year, '-', input$month, '-31'))
-        }
-
-        # updates dates filters
-        updateDateInput(
-            session
-            , "start_date"
-            , label = paste("Start Date")
-            , value = beg_selected
-            , min = beg_selected
-            , max = end_selected
-        )
-        updateDateInput(
-            session
-            , "end_date"
-            , label = paste("End Date")
-            , value = end_selected
-            , min = beg_selected
-            , max = end_selected
-        )
-    })
-
 
     output$tbl <- renderDT({
 
