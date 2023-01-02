@@ -455,8 +455,8 @@ make_totals_bold <- function(table_obj, dfm) {
 # test_colors <- rep(10, length(color_palette))
 # barplot(test_colors, col=color_palette, names.arg=color_palette)
 
-# # IMPORTANT: to test in R, need to remove any filtering conds on term and client_code from funcs
-# #            OR just download from app and read in (easiest!)
+# NOTE: to test in R, need to remove any filtering conds on term and client_code from funcs
+#       OR just download from app and read in (easiest!)
 
 # input <- data.frame(
 #     "report"="Sessions"
@@ -472,60 +472,23 @@ make_totals_bold <- function(table_obj, dfm) {
 # total_row <- dfm[nrow(dfm), ]
 # dfm <- dfm[-nrow(dfm), ]
 
-#     g <- ggplot(dfm, aes(x=code, y=session_hs, fill=term_type)) +
-#         geom_boxplot() +
-#         scale_fill_manual(values = c("#FB8072", "#718FDE", "#65CFEB", "#5CC363", "#A4EC65")) +
-#         #geom_jitter(color="blue", size=1, alpha=0.5) + # not necessary
-#     # style
-#     g +
-#         theme_classic(base_size = 16) +
-#         geom_hline(yintercept = mean_hs
-#             , col = "black", linetype = "dotted", size = 1.2) +
-#         ggtitle(paste0(title, " by Client")
-#             , subtitle = "Subtitle") +
-#         labs(x = "", y = "Hours") +
-#         theme(plot.title = element_text(size = 22)
-#             , plot.subtitle = element_text(size = 18)
-#             , axis.text.x = element_text(size = 16)
-#             , text = element_text(size = 16)
-#             , legend.position = "right")
 
-# # chosen
-#     num_dates <- length(unique(dfm$date))
-#     num_cols <- ifelse(num_dates > 8, 2, 1)
-#     # prep base
-#     ggplot(dfm, aes(x = code, y = tot_hs, fill = term)) +
-#         geom_bar(stat = 'identity') +
-#         facet_wrap(~ date, ncol = num_cols) +
-#         scale_fill_manual(values = c("#FB8072", "#80B1D3", "#8DD367")) +
-#         ggtitle("title"
-#             , subtitle = paste0("Subtitle")) +
-#         labs(x = "", y = "Total Hours") +
-#         theme_bw() +
-#         theme(plot.title = element_text(size = 22)
-#             , plot.subtitle = element_text(size = 18)
-#             , axis.text.x = element_text(size = 14, angle = 90, vjust = 0.5, hjust=1)
-#             , text = element_text(size = 16)
-#             , legend.position = "right")
-
+# other versions:
 # ggplot(dfm, aes(x = code, y = tot_hs, fill = term)) +
 #     geom_bar(stat = 'identity') +
 #     facet_wrap(~ date, ncol = 1) +
 #     labs(x = "", y = "Total Hours") +
 #     theme_bw()
-
 # ggplot(dfm, aes(x = code, y = tot_hs, fill = code)) +
 #     geom_bar(stat = 'identity') +
 #     facet_wrap(~ date, ncol = 1) +
 #     labs(x = "", y = "Total Hours") +
 #     theme_bw()
-
 # ggplot(dfm, aes(x = date, y = tot_hs, fill = code)) +
 #     geom_bar(stat = 'identity') +
 #     facet_wrap(~ term, ncol = 1) +
 #     labs(x = "", y = "Total Hours") +
 #     theme_bw()
-
 # ggplot(dfm[dfm$term %in% c("month", "biz"), ], aes(x = date, y = tot_hs, fill = code)) +
 #     geom_bar(stat = 'identity') +
 #     facet_wrap(~ code, ncol = 2) +
@@ -533,21 +496,38 @@ make_totals_bold <- function(table_obj, dfm) {
 #     theme_bw()
 
 plot_boxplots <- function(dfm, title) {
+    # custom scale fill to fix term-types to a color
+    # hard-code term-types to fix them, not: ttypes <- sort(unique(dfm$term_type))
+    ttypes <- c(
+        "biz - biz"
+        , "month - flat rate"
+        , "month - hourly"
+        , "quarter - flat rate"
+        , "quarter - hourly"
+    )
+    scale_fill_ttypes <- function(...) {
+        ggplot2:::manual_scale(
+            'fill', 
+            values = setNames(c("#FB8072", "#A6CEE3", "#1F78B4", "#B2DF8A", "#33A02C")
+            , ttypes),
+            ...
+        )
+    }
     # prep base
     g <- ggplot(dfm, aes(x=code, y=session_hs, fill=term_type)) +
         geom_boxplot() +
-        scale_fill_manual(values = c("#FB8072", "#A6CEE3", "#1F78B4", "#B2DF8A", "#33A02C" )) +
+        scale_fill_ttypes() +
         geom_jitter(color="red", size=1.2, alpha=0.6)
     # style
     g <- g +
         theme_classic(base_size = 16) +
         ggtitle(paste0(title, " by Client")
             , subtitle = paste0("Total: ", nrow(dfm)
-                , " | Biz: ", nrow(dfm[dfm$term_type == "biz - biz", ])
-                , " | Month (FR): ", nrow(dfm[dfm$term_type == "month - flat rate", ])
-                , " | Month (hourly): ", nrow(dfm[dfm$term_type == "month - hourly", ])
-                , " | Quarter (FR): ", nrow(dfm[dfm$term_type == "quarter - flat rate", ])
-                , " | Quarter (hourly): ", nrow(dfm[dfm$term_type == "quarter - hourly", ])
+                , " | Biz: ", nrow(dfm[dfm$term_type == ttypes[1], ])
+                , " | Month (FR): ", nrow(dfm[dfm$term_type == ttypes[2], ])
+                , " | Month (hourly): ", nrow(dfm[dfm$term_type == ttypes[3], ])
+                , " | Quarter (FR): ", nrow(dfm[dfm$term_type == ttypes[4], ])
+                , " | Quarter (hourly): ", nrow(dfm[dfm$term_type == ttypes[5], ])
             )) +
         labs(x = "", y = "Hours") +
         theme(plot.title = element_text(size = 22)
