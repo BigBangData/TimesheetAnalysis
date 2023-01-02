@@ -25,7 +25,7 @@ ui <- navbarPage(
                     inputId = "report",
                     label = "Report",
                     choices = reports,
-                    selected = reports[6]
+                    selected = reports[1]
                 ),
                 tags$style(HTML("hr {border-top: 1px solid #000000;}")),
                 hr(),
@@ -53,7 +53,7 @@ ui <- navbarPage(
                     inputId = "month",
                     label = "Month",
                     choices = c("All", month_list),
-                    selected = "10"
+                    selected = "All"
                 ),
                 # start date
                 dateInput(
@@ -77,7 +77,7 @@ ui <- navbarPage(
                     inputId = "term",
                     label = "Term",
                     choices = c("month", "quarter", "biz"),
-                    selected = "month",
+                    selected = c("month", "quarter", "biz"),
                     inline = TRUE
                 ),
                 # select client groups
@@ -85,7 +85,7 @@ ui <- navbarPage(
                     inputId = "client_group",
                     label = "Client Group",
                     choices = client_groups,
-                    selected = "month",
+                    selected = client_groups[1], # All
                     inline = TRUE
                 ),
                 # checkbox for client code
@@ -93,7 +93,7 @@ ui <- navbarPage(
                     inputId = "client_code",
                     label = "Client Code",
                     choices = c("All", rts$code),
-                    selected = rts$code[rts$term == "month"]
+                    selected = "All" # rts$code[rts$term == "month"]
                 )
             ),
             mainPanel(width = 10,

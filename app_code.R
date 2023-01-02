@@ -1,11 +1,7 @@
 # TO DO:
-# rethink plot vs data first
-# redo msg for no plots
-# add restrictions for each plots in footer
-# create README, note limitations (no variable rates)
-# deploy app
-# add to portfolio
-
+# 1. add plot for annual report & hard-code colors for sessions just like ifelse
+# 2. create README, note limitations (no variable rates, plot restrictions)
+# 3. deploy app & add to portfolio
 
 # Setup
 # -------
@@ -17,10 +13,6 @@ options(scipen=999)
 # suppress group by warnings
 options(dplyr.summarise.inform = FALSE)
 
-
-# Install and/or load packages
-# ---------------------------
-
 install_packages <- function(pkg){
     new_pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
     if (length(new_pkg)) suppressMessages(install.packages(new_pkg, dependencies = TRUE))
@@ -29,18 +21,6 @@ install_packages <- function(pkg){
 
 pkgs <- c("dplyr", "DT", "ggplot2", "ggrepel", "lubridate", "shiny")
 suppressPackageStartupMessages(install_packages(pkgs))
-
-# To test in R:
-# setwd("../GitHub/TimesheetAnalysis")
-
-# input <- data.frame(
-#     "report"="Monthly Hours"
-#     , "term"=c("month")
-#     , "quarter"=c("All")
-#     , "start_date"=as.Date('2022-02-01')
-#     , "end_date"=as.Date('2022-12-31')
-#     , "client_group"="All"
-# )
 
 # Load data
 # ---------
@@ -60,6 +40,9 @@ if (length(new_codes) > 0) {
     )
     stop(err)
 }
+
+# Munge Data
+# ----------
 
 # fix data types
 # Note: do not edit CSVs in Excel
@@ -124,9 +107,7 @@ rts <- na.omit(rts)
 mm <- merge(tms, rts, by.x="code", by.y="code")
 mm$rate <- as.numeric(mm$rate)
 mm <- mm[order(mm$start_time), ]
-#mm <- mm[order(mm$date, mm$day_cumsum_hs), ]
 row.names(mm) <- 1:nrow(mm)
-#mm <- mm[, colnames(mm) != 'start_time']
 mm <- mm[, c('code', 'date', 'session_hs', 'notes', 'tags', 'type', 'term', 'rate')]
 
 # add missing dates
@@ -470,19 +451,20 @@ make_totals_bold <- function(table_obj, dfm) {
 # display.brewer.all()
 
 # # Use hex values directly:
-# color_palette <- brewer.pal(n = 8, name = "Set3")
+# color_palette <- brewer.pal(n = 8, name = "Paired")
 # test_colors <- rep(10, length(color_palette))
 # barplot(test_colors, col=color_palette, names.arg=color_palette)
 
-# # test in R, need to remove the checks in third_agg and daily_by_client_agg
-# # for both client_code AND term
+# # IMPORTANT: to test in R, need to remove any filtering conds on term and client_code from funcs
+# #            OR just download from app and read in (easiest!)
+
 # input <- data.frame(
-#     "report"="Daily Hours by Client"
-#     , "term"=c("all")
-#     , "quarter"=c("all")
+#     "report"="Sessions"
+#     , "term"="All"
+#     , "quarter"="4"
 #     , "start_date"=as.Date('2022-10-01')
 #     , "end_date"=as.Date('2022-10-07')
-#     , "client_group"="all"
+#     , "client_group"="All"
 # )
 
 # # dev plot
@@ -490,11 +472,25 @@ make_totals_bold <- function(table_obj, dfm) {
 # total_row <- dfm[nrow(dfm), ]
 # dfm <- dfm[-nrow(dfm), ]
 
-# dfm <- read.csv("test.csv")
-# dfm <- dfm[-nrow(dfm), ]
-# dfm <- dfm[dfm$date >= "2022-12-20",]
+#     g <- ggplot(dfm, aes(x=code, y=session_hs, fill=term_type)) +
+#         geom_boxplot() +
+#         scale_fill_manual(values = c("#FB8072", "#718FDE", "#65CFEB", "#5CC363", "#A4EC65")) +
+#         #geom_jitter(color="blue", size=1, alpha=0.5) + # not necessary
+#     # style
+#     g +
+#         theme_classic(base_size = 16) +
+#         geom_hline(yintercept = mean_hs
+#             , col = "black", linetype = "dotted", size = 1.2) +
+#         ggtitle(paste0(title, " by Client")
+#             , subtitle = "Subtitle") +
+#         labs(x = "", y = "Hours") +
+#         theme(plot.title = element_text(size = 22)
+#             , plot.subtitle = element_text(size = 18)
+#             , axis.text.x = element_text(size = 16)
+#             , text = element_text(size = 16)
+#             , legend.position = "right")
 
-# # best one
+# # chosen
 #     num_dates <- length(unique(dfm$date))
 #     num_cols <- ifelse(num_dates > 8, 2, 1)
 #     # prep base
@@ -536,6 +532,32 @@ make_totals_bold <- function(table_obj, dfm) {
 #     labs(x = "", y = "Total Hours") +
 #     theme_bw()
 
+plot_boxplots <- function(dfm, title) {
+    # prep base
+    g <- ggplot(dfm, aes(x=code, y=session_hs, fill=term_type)) +
+        geom_boxplot() +
+        scale_fill_manual(values = c("#FB8072", "#A6CEE3", "#1F78B4", "#B2DF8A", "#33A02C" )) +
+        geom_jitter(color="red", size=1.2, alpha=0.6)
+    # style
+    g <- g +
+        theme_classic(base_size = 16) +
+        ggtitle(paste0(title, " by Client")
+            , subtitle = paste0("Total: ", nrow(dfm)
+                , " | Biz: ", nrow(dfm[dfm$term_type == "biz - biz", ])
+                , " | Month (FR): ", nrow(dfm[dfm$term_type == "month - flat rate", ])
+                , " | Month (hourly): ", nrow(dfm[dfm$term_type == "month - hourly", ])
+                , " | Quarter (FR): ", nrow(dfm[dfm$term_type == "quarter - flat rate", ])
+                , " | Quarter (hourly): ", nrow(dfm[dfm$term_type == "quarter - hourly", ])
+            )) +
+        labs(x = "", y = "Hours") +
+        theme(plot.title = element_text(size = 22)
+            , plot.subtitle = element_text(size = 18)
+            , axis.text.x = element_text(size = 16)
+            , text = element_text(size = 16)
+            , legend.position = "right")
+    return(g)
+}
+
 plot_faceted_barplots <- function(dfm, total_row, xaxis, title) {
     num_dates <- length(unique(dfm$date))
     num_cols <- ifelse(num_dates > 8, 2, 1)
@@ -548,7 +570,7 @@ plot_faceted_barplots <- function(dfm, total_row, xaxis, title) {
         geom_bar(stat = 'identity') +
         facet_wrap(~ date, ncol = num_cols) +
         scale_fill_manual(values = c("#FB8072", "#80B1D3", "#8DD367"))
-    # style plot
+    # style
     g <- g +
         ggtitle(title
             , subtitle = paste0("Total: ", total_hs
@@ -591,7 +613,7 @@ plot_barline <- function(dfm, total_row, xaxis, title) {
             , col = "#BB0828", linetype = "dotted", size = 1.2) +
         geom_hline(yintercept = mean_revenue
             , col = "#7D848A", linetype = "dashed", size = 1)
-    # style plot
+    # style
     g <- g +
         theme_classic(base_size = 16) +
         ggtitle(title
@@ -628,7 +650,7 @@ plot_hours_barplot <- function(dfm, total_row, xaxis, title) {
         days_avail <- length(unique(dfm$date))
         pct_days_work <- round(100 * days_work / days_avail, 2)
         subtitle_head <- ""
-        # prep base barplot
+        # prep base
         g <- ggplot(dfm, aes(x=as.Date(date), y=tot_hs, fill=weekday)) + 
             geom_bar(stat="identity") +
             scale_fill_manual(values = c("#80B1D3", "#FB8072"))
@@ -641,11 +663,11 @@ plot_hours_barplot <- function(dfm, total_row, xaxis, title) {
         pct_days_work <- 100 * total_row$pct_days_work
         subtitle_head <- paste0("Avg ", deparse(substitute(xaxis))
             , "ly hs: ", mean_hs, " hs | ")
-        # prep base barplot
+        # prep base
         g <- ggplot(dfm, aes(x={{xaxis}}, y=tot_hs, fill=quarter)) + 
             geom_bar(stat="identity")
     }
-    # add avg line, title, labs, theme
+    # style
     g <- g +
         theme_classic(base_size = 16) +
         geom_hline(yintercept = mean_hs
@@ -706,11 +728,14 @@ plot_client_scatter <- function(dfm, total_row, title) {
 }
 
 return_plot <- function(dfm_with_totals, input, reports) {
-    # separate out total row (for all reports)
+    # separate out total row
     total_row <- dfm_with_totals[nrow(dfm_with_totals), ]
     dfm <- dfm_with_totals[-nrow(dfm_with_totals), ]
+    # Sessions
+    if (input$report == reports[1]) {
+        p <- plot_boxplots(dfm, title=reports[1])
     # Daily Hours
-    if (input$report == reports[2]) {
+    } else if (input$report == reports[2]) {
         p <- plot_hours_barplot(dfm, total_row, xaxis="", title=reports[2])
     # Daily Hours by Client
     } else if (input$report == reports[3]) {
@@ -733,7 +758,7 @@ return_plot <- function(dfm_with_totals, input, reports) {
     # Quarter Report
     } else if (input$report ==  reports[9]) {
         p <- plot_barline(dfm, total_row, xaxis=quarter, title=reports[9])
-    # Sessions, etc.
+    # Annual Report
     } else {
         p <- ggplot(data.frame(data=c(""))) +
             ggtitle("No Plots Available for Session Data and the Annual Report") +
