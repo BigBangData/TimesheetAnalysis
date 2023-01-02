@@ -45,7 +45,7 @@ ui <- navbarPage(
                     inputId = "quarter",
                     label = "Quarter",
                     choices = c("All", "1", "2", "3", "4"),
-                    selected = "4",
+                    selected = "All",
                     inline = TRUE
                 ),
                 # select month
@@ -145,8 +145,8 @@ ui <- navbarPage(
 server <- function(input, output, session) {
     # year slider udpates available dates
     observe({
-        beg_selected <- min(mm$date[year(mm$date) == input$year])
-        end_selected <- max(mm$date[year(mm$date) == input$year])
+        beg_selected <- min(mm$date[mm$year == input$year])
+        end_selected <- max(mm$date[mm$year == input$year])
         updateDateInput(
             session
             , "start_date"
@@ -281,6 +281,8 @@ server <- function(input, output, session) {
     })
     # data table
     output$tab <- renderDT({
+        # return_dfm is an abstraction that hides
+        # all the logic for each report, see app_code.R
         dfm <- return_dfm(input, reports)
         # config table object
         table_obj <- DT::datatable(

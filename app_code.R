@@ -334,7 +334,7 @@ annual_report <- function(mm, input) {
     month_agg <- third_agg(mm, input, quarter, month)
     year_month_agg <- period_rates(month_agg, quarter, month)
     # reformat and fix rates
-    year_month_agg$year <- factor(max(as.numeric(as.character(mm$year))))
+    year_month_agg$year <- factor(input$year)
     year_month_agg$term <- 'month'
     year_month_agg <- year_month_agg %>% group_by(year, quarter, term) %>%
         summarise(revenue = sum(revenue)
@@ -471,6 +471,10 @@ make_totals_bold <- function(table_obj, dfm) {
 # dfm <- return_dfm(input, reports)
 # total_row <- dfm[nrow(dfm), ]
 # dfm <- dfm[-nrow(dfm), ]
+
+# dfm_totals <- read.csv("Annual Report 2023-01-02.csv")
+# dfm <- dfm_totals[!dfm_totals$year %in% c("Quarter Total", "Annual Total"), ]
+# totals <- dfm_totals[dfm_totals$year %in% c("Quarter Total", "Annual Total"), ]
 
 
 # other versions:
