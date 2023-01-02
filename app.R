@@ -17,7 +17,7 @@ ui <- navbarPage(
         tags$a(href="https://www.time.gov/", img(src="monty.png", height = 50, width = 50)),
         "Timesheet Analysis"
     ),
-    tabPanel(title = "Data Viz",
+    tabPanel(title = "Plots",
         sidebarLayout(position = "left",
             sidebarPanel(width = 2,
                 # drop-down for report
@@ -103,13 +103,13 @@ ui <- navbarPage(
             )
         )
     ),
-    tabPanel(title = "Data Tab",
+    tabPanel(title = "Data & Downloads",
         sidebarLayout(position = "left",
             sidebarPanel(width = 2,
-                downloadButton("download_csv", label = "Download Table"),
+                downloadButton("download_csv", label = "Download Data"),
                 hr(),
-                downloadButton("download_plot", label = "Download Viz"),
-                hr(),
+                downloadButton("download_plot", label = "Download Plot"),
+                br(), br(),
                 # select height
                 selectInput(
                     inputId = "height",
