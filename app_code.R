@@ -1,7 +1,7 @@
 # TO DO:
-# 1. add plot for annual report & hard-code colors for sessions just like ifelse
+# 1. deploy app
 # 2. create README, note limitations (no variable rates, plot restrictions)
-# 3. deploy app & add to portfolio
+# 2. make gif, add to portfolio
 
 # Setup
 # -------
@@ -19,7 +19,7 @@ install_packages <- function(pkg){
     sapply(pkg, require, character.only = TRUE)
 }
 
-pkgs <- c("dplyr", "DT", "ggplot2", "ggrepel", "lubridate", "shiny")
+pkgs <- c("dplyr", "DT", "ggplot2", "ggrepel", "lubridate", "shiny") # ggmosaic 
 suppressPackageStartupMessages(install_packages(pkgs))
 
 # Load data
@@ -343,8 +343,12 @@ annual_report <- function(mm, input) {
     quarter_totals <- period_totals(year_quarter_agg)
     month_totals <- period_totals(year_month_agg)
     # combine and add totals
-    dfa <- rbind(quarter_totals, month_totals) %>%
-        mutate(year = ifelse(year == "Total", "Quarter Total", year))
+    dfa <- rbind(
+        quarter_totals %>%
+            mutate(year = ifelse(year == "Total", "Quarterly Total", year)),
+        month_totals %>%
+            mutate(year = ifelse(year == "Total", "Monthly Total", year))
+    )
     dfa_totals <- rbind(dfa,
         period_totals(rbind(year_quarter_agg, year_month_agg)) %>%
             filter(year == "Total")) %>%
@@ -472,10 +476,76 @@ make_totals_bold <- function(table_obj, dfm) {
 # total_row <- dfm[nrow(dfm), ]
 # dfm <- dfm[-nrow(dfm), ]
 
-# dfm_totals <- read.csv("Annual Report 2023-01-02.csv")
-# dfm <- dfm_totals[!dfm_totals$year %in% c("Quarter Total", "Annual Total"), ]
-# totals <- dfm_totals[dfm_totals$year %in% c("Quarter Total", "Annual Total"), ]
+# dev annual report
 
+# dfm_with_totals <- read.csv("Annual Report 2023-01-02.csv")
+# total_row <- dfm_with_totals[nrow(dfm_with_totals), ]
+# dfm <- dfm_with_totals[-nrow(dfm_with_totals), ]
+# # remove totals
+# dfd <- dfm[!dfm$year %in% c("Quarterly Total", "Monthly Total"), -1]
+# # turn values into percentages, for comparison
+# wide <- dfd %>%
+#         mutate(revenue = revenue/sum(revenue)
+#             , hours = hours/sum(hours)
+#             , avg_hourly_rate = avg_hourly_rate/sum(avg_hourly_rate))
+# # reshape
+# long <- data.frame(
+#     wide %>% 
+#         pivot_longer(
+#             cols = `revenue`:`avg_hourly_rate`, 
+#             names_to = "metric",
+#             values_to = "freq"
+#     )
+# )
+
+# # prep base
+# ggplot(long, aes(x=quarter, y=freq, fill=term)) + 
+#     geom_col(position = "dodge") +
+#     facet_grid(quarter ~ metric) +
+#     scale_fill_manual(values = c("#80B1D3", "#8DD367"))
+
+# for ggmosaic
+# round_then_int <- function(x) as.integer(round(x))
+# wide <- cbind(dfm[sapply(dfm, is.character)]
+#         , sapply(dfm[sapply(dfm, is.numeric)], round_then_int))
+
+# turn values into percentages, for comparison
+# wide <- dfm %>%
+#         mutate(revenue = revenue/sum(revenue)
+#             , hours = hours/sum(hours)
+#             , avg_hourly_rate = avg_hourly_rate/sum(avg_hourly_rate))
+
+# long <- data.frame(
+#     wide %>% 
+#         pivot_longer(
+#             cols = `revenue`:`hours`:`avg_hourly_rate`, 
+#             names_to = "metric",
+#             values_to = "freq"
+#     )
+# )
+
+# ggplot(wide, aes(x=quarter, y=hours, fill=term)) + geom_bar(stat="identity")
+# ggplot(wide, aes(x=quarter, y=hours, fill=term)) + geom_col(position = "dodge")
+
+# g <- ggplot(data = long) + 
+#     geom_mosaic(aes(x = product(metric, term, quarter), fill=term, weight=freq)) +
+#     facet_grid(metric ~ quarter) + 
+#     scale_fill_manual(values = c("#80B1D3", "#8DD367"))
+
+    # # prep base
+    # g <- ggplot(long, aes(x=quarter, y=freq, fill=term)) + 
+    #     geom_col(position = "dodge") + 
+    #     facet_grid(quarter ~ metric) +
+    #     scale_fill_manual(values = c("#80B1D3", "#8DD367"))
+    # # style
+    # g <- g +
+    #     theme_bw(base_size = 16) +
+    #     labs(x = "", y = "%") +
+    #     theme(plot.title = element_text(size = 22)
+    #         , plot.subtitle = element_text(size = 18)
+    #         , axis.text.x = element_text(size = 16)
+    #         , text = element_text(size = 16)
+    #         , legend.position = "right")
 
 # other versions:
 # ggplot(dfm, aes(x = code, y = tot_hs, fill = term)) +
@@ -498,6 +568,50 @@ make_totals_bold <- function(table_obj, dfm) {
 #     facet_wrap(~ code, ncol = 2) +
 #     labs(x = "", y = "Total Hours") +
 #     theme_bw()
+
+plot_colbars <- function(dfm, total_row, title) {
+    # no need for year var (-1)
+    # total_row has Annual Total
+    dfd <- dfm[!dfm$year %in% c("Quarterly Total", "Monthly Total"), -1]
+    annual_rev <- format(total_row$revenue, big.mark=",")
+    quarter_rev <- format(dfm$revenue[dfm$year == "Quarterly Total"], big.mark=",")
+    month_rev <- format(dfm$revenue[dfm$year ==  "Monthly Total"], big.mark=",")
+    # turn values into percentages, for comparison
+    wide <- dfd %>%
+            mutate(revenue = revenue/sum(revenue)
+                , hours = hours/sum(hours)
+                , avg_hourly_rate = avg_hourly_rate/sum(avg_hourly_rate))
+    # reshape
+    long <- data.frame(
+        wide %>% 
+            pivot_longer(
+                # from one col to the other col, in order
+                cols = `revenue`:`avg_hourly_rate`,
+                names_to = "metric",
+                values_to = "freq"
+        )
+    )
+    # prep base
+    g <- ggplot(long, aes(x=quarter, y=freq, fill=term)) + 
+        geom_col(position = "dodge") +
+        facet_grid(quarter ~ metric) +
+        scale_fill_manual(values = c("#80B1D3", "#8DD367"))
+    # style
+    g <- g +
+        theme_bw(base_size = 16) +
+        ggtitle(title
+            , subtitle = paste0("Annual Revenue: ", annual_rev
+                , " | Quarterly Clients: ", quarter_rev
+                , " | Monthly Clients: ", month_rev
+                )) +
+        labs(x = "", y = "%") +
+        theme(plot.title = element_text(size = 22)
+            , plot.subtitle = element_text(size = 18)
+            , axis.text.x = element_text(size = 16)
+            , text = element_text(size = 16)
+            , legend.position = "right")
+    return(g)
+}
 
 plot_boxplots <- function(dfm, title) {
     # custom scale fill to fix term-types to a color
@@ -743,9 +857,11 @@ return_plot <- function(dfm_with_totals, input, reports) {
     } else if (input$report ==  reports[9]) {
         p <- plot_barline(dfm, total_row, xaxis=quarter, title=reports[9])
     # Annual Report
+    } else if (input$report ==  reports[10]) {
+        p <- plot_colbars(dfm, total_row, title=reports[10])
     } else {
         p <- ggplot(data.frame(data=c(""))) +
-            ggtitle("No Plots Available for Session Data and the Annual Report") +
+            ggtitle("No Plots Available") +
             theme_classic() +
             theme(plot.title = element_text(size = 22))
     }
