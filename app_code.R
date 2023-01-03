@@ -1,5 +1,5 @@
-# TO DO:
-# 1. deploy app
+# TO DO
+# 1. deploy app to shinyapp.io: library(rsconnect); DeployApp()
 # 2. create README, note limitations (no variable rates, plot restrictions)
 # 2. make gif, add to portfolio
 
@@ -13,14 +13,22 @@ options(scipen=999)
 # suppress group by warnings
 options(dplyr.summarise.inform = FALSE)
 
-install_packages <- function(pkg){
-    new_pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
-    if (length(new_pkg)) suppressMessages(install.packages(new_pkg, dependencies = TRUE))
-    sapply(pkg, require, character.only = TRUE)
-}
+# install_packages <- function(pkg){
+#     new_pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+#     if (length(new_pkg)) suppressMessages(install.packages(new_pkg, dependencies = TRUE))
+#     sapply(pkg, require, character.only = TRUE)
+# }
 
-pkgs <- c("dplyr", "DT", "ggplot2", "ggrepel", "lubridate", "shiny") # ggmosaic 
-suppressPackageStartupMessages(install_packages(pkgs))
+# pkgs <- c("dplyr", "DT", "ggplot2", "ggrepel", "lubridate", "shiny") # ggmosaic 
+# suppressPackageStartupMessages(install_packages(pkgs))
+
+library(dplyr)
+library(tidyr)
+library(DT)
+library(ggplot2)
+library(ggrepel)
+library(lubridate)
+library(shiny)
 
 # Load data
 # ---------
