@@ -1,5 +1,4 @@
-<img style="float: left;" src="www/monty.png" width=80/><h1 style="color:#B265EE;">&nbsp;Timesheet Analysis</h1>
-
+# Timesheet Analysis
 
 ---
 
@@ -29,9 +28,12 @@ See [using the app](#using-the-app) for how to use the app. [Try the app](#try-t
 
 ## [Try the app](#try-the-app)
 
-Try the app [here](https://bigbangdata.shinyapps.io/timesheetanalysis/). Please give this free service a few seconds ⏳ to spin up the app. 🙏🏼
+<center>Please give this free service a few seconds ⏳ to spin up the app. 🙏🏼</center>
 
-The app isn't 100% intuitive for the uninitiated. 🛐 
+[<center><img src="www/monty.png" width=40></center>](https://bigbangdata.shinyapps.io/timesheetanalysis/)
+
+
+Note that the app isn't 100% intuitive for the uninitiated... 🛐
 
 Select an appropriate time period 📅 before selecting a report:
 
