@@ -1,7 +1,13 @@
 # TO DO
-# 1. deploy app to shinyapp.io: library(rsconnect); DeployApp()
+# 1. fix long days, possibly rethink faking data into it's own tab to fake data
 # 2. create README, note limitations (no variable rates, plot restrictions)
-# 2. make gif, add to portfolio
+# 3. make gif, add to portfolio
+
+# Notes:
+# To deploy (initial or otherwise), run: library(rsconnect); DeployApp()
+#   - the app's name (url) will be the name of the folder where app.R is located
+# https://bigbangdata.shinyapps.io/timesheetanalysis/
+
 
 # Setup
 # -------

@@ -21,7 +21,7 @@ suppressPackageStartupMessages(install_packages(pkgs))
 ########################################################################################
 ## WORK DAYS
 
-# creata a dfd (data frame at the day level) of dates worked
+# creata a data frame at the day level (dfd) of dates worked
 set.seed(123)
 year_start <- 2020
 year_end <- 2023
@@ -42,6 +42,7 @@ date_spine <- seq(
     , to=as.Date(paste0(year_end, '-12-31'), "%Y-%m-%d")
     , by=1
 )
+
 dfd <- data.frame(
     date=as.Date(date_spine)
     , day_out=binomial_mask
@@ -95,7 +96,7 @@ aftn_p <- c(
     0.0127
 )
 
-even_p <- c(0.554, 0.266, 0.102, 0.078)
+even_p <- c(0.554, 0.296, 0.122, 0.028)
 
 n_morn <- nrow(dfd[dfd$day_period == "morning", ])
 n_aftn <- nrow(dfd[dfd$day_period == "afternoon", ])
@@ -161,6 +162,17 @@ dfs$session_mins <- ifelse(
     )
 )
 
+# when over 15 sessions, reduce long sessions
+cond <- (dfs$num_sessions >= 15 & dfs$session_mins >= 40)
+dfs$session_mins[cond] <- floor(dfs$session_mins[cond]/4)
+
+# do it again if necessary
+cond <- (dfs$num_sessions >= 15 & dfs$session_mins >= 40)
+if (length(dfs$session_mins[cond]) > 0) {
+    cond <- (dfs$num_sessions >= 15 & dfs$session_mins >= 40)
+    dfs$session_mins[cond] <- floor(dfs$session_mins[cond]/4)
+}
+
 # calculate cumulative sum of minutes through the day
 dfs$cumsum_mins <- ave(dfs$session_mins, dfs$date, FUN=cumsum)
 
@@ -182,27 +194,23 @@ for (i in 2:nrow(dfs)) {
 # create end datetimes based on session start times and session durations
 dfs$end_datetime <- dfs$start_datetime + dfs$session_mins * 60
 
-
 # examine data for issues such as working through midnight
-dd <- data.frame(
-    dfs %>%
-    select(date, day_period, end_datetime) %>%
-    # filter(day_period == "eve") 
-    group_by(date) %>%
-    summarise(
-        first_end = dplyr::first(end_datetime),
-        last_end = dplyr::last(end_datetime)
-    ) %>%
-    arrange(desc(hour(last_end)))
-)
+# dd <- data.frame(
+#     dfs %>%
+#     select(date, day_period, end_datetime) %>%
+#     # filter(day_period == "eve") 
+#     group_by(date) %>%
+#     summarise(
+#         first_end = dplyr::first(end_datetime),
+#         last_end = dplyr::last(end_datetime)
+#     ) %>%
+#     arrange(desc(hour(last_end)))
+# )
 
-# problematic days
-dfs[hour(dfs$end_datetime) < 6, ]
+# # days when worked through midnight
+# dfs[hour(dfs$end_datetime) < 6, ]
+# dfs[dfs$date != substr(dfs$start_datetime, 1, 10), ]
 
-dfs[dfs$date != substr(dfs$start_datetime, 1, 10), ]
-
-## HERE HERE HERE
-# yes, confirmed that in the app those become negative hours worked
 
 ########################################################################################
 # CLIENT CODES
