@@ -9,14 +9,20 @@
 
 ## [Motivation](#motivation)
 
-My wife owns a bookkeeping business ⚖️ 📚 and we found some ways for me to help her automate and analyze things. 🤖 📈
+My wife owns a bookkeeping 📚 business and we found some ways for me to help her automate and analyze 📈 things.
 
-I've been learning [shiny](https://shiny.rstudio.com/) with projects such as [Coronavirus: Latest Country Statistics](https://bigbangdata.shinyapps.io/shinyapp/) and thought it'd be a good tool since downloading and running R is more user-friendly to non-programmers than the whole python ecosystem 🐍🐍🐍, and running a local app is better for security and privacy. 🔐
+I've been learning [shiny](https://shiny.rstudio.com/) with projects such as [this](https://bigbangdata.shinyapps.io/shinyapp/) and thought it'd be a good tool since downloading and running R is more user-friendly to non-programmers than the whole python 🐍🐍🐍 ecosystem and running a local app is better for security 🔐and privacy.
 
-In `v1` of this project we used Excel🐱‍👤 as input-output. In `v2` we used Excel as input and a local shiny app ✨as output. This project recreates `v2` with fake data 🙃 using R and probabilities derived from actual data for a more realistic input. Still has some imperfections (see [Faking data](#faking-data)) but is good enough for the project.
+In `v1` of this project we used Excel as input-output. In `v2` we used Excel as input and a local shiny app as output. This project recreates `v2` with fake data...
 
 
-In theory, 👼this app can be adapted by anyone who keeps a timesheet of any sort (hobbies, projects, exercise...) and wants to see some reporting on it. In practice, 👊👊👊a lot of reworking might be needed unless one's a bookkeeper with similar client breakdown and reporting needs.
+<center><img src="www/munchfakedata.jpg" width=150></center>
+
+
+...in a reproducible and more realistic way than using a service like [mockaroo](https://www.mockaroo.com/) by using R and probabilities derived from actual data. This still has some imperfections (see [faking data](#faking-data)) but is good enough for the project.
+
+
+In theory🎓this app can be adapted by anyone who keeps a timesheet of any sort (hobbies, projects, exercise...) and wants to see some reporting on it. In practice 👊a lot of reworking might be needed unless one's a bookkeeper with similar client breakdown and reporting needs.
 
 See [using the app](#using-the-app) for how to use the app. [Try the app](#try-the-app) or see [reproduce the app](#reproduce-the-app) to reproduce it locally. 💻
 
@@ -35,7 +41,7 @@ See [using the app](#using-the-app) for how to use the app. [Try the app](#try-t
 
 Please give this free service a few seconds ⏳ to spin up the app. 🙏🏼
 
-[<img src="www/monty.png" width=40>](https://bigbangdata.shinyapps.io/timesheetanalysis/)
+[<center><img src="www/monty.png" width=100>](https://bigbangdata.shinyapps.io/timesheetanalysis/)</center>
 
 
 The app isn't super intuitive for the uninitiated... 🛐
