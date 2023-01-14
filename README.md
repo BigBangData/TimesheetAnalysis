@@ -11,20 +11,19 @@
 
 My wife owns a bookkeeping 📚 business and we found some ways for me to help her automate and analyze 📈 things.
 
-I've been learning [shiny](https://shiny.rstudio.com/) with projects such as [this](https://bigbangdata.shinyapps.io/shinyapp/) and thought it'd be a good tool since downloading and running R is more user-friendly to non-programmers than the whole python 🐍🐍🐍 ecosystem and running a local app is better for security 🔐and privacy.
+I've been learning [shiny](https://shiny.rstudio.com/) with projects such as [this](https://bigbangdata.shinyapps.io/shinyapp/) and thought it'd be a good tool for her since downloading and running R is more user-friendly to non-programmers than the whole python 🐍🐍🐍 ecosystem and running a local app is better for security 🔐and privacy.
 
-In `v1` of this project we used Excel as input-output. In `v2` we used Excel as input and a local shiny app as output. This project recreates `v2` with fake data...
+In `v1` of this project we used Excel as input-output to an R script. In `v2` we used Excel as input and a local shiny app as output. This public-facing `v3` of the project recreates the shiny app with fake data...
 
-
-<<p align="center"><img src="www/munchfakedata.jpg" width=150></p>
-
-
-...in a reproducible and more realistic way than using a service like [mockaroo](https://www.mockaroo.com/) by using R and probabilities derived from actual data. This still has some imperfections (see [faking data](#faking-data)) but is good enough for the project.
+<p align="center"><img src="www/munchfakedata.jpg" width=150></p>
 
 
-In theory🎓this app can be adapted by anyone who keeps a timesheet of any sort (hobbies, projects, exercise...) and wants to see some reporting on it. In practice 👊a lot of reworking might be needed unless one's a bookkeeper with similar client breakdown and reporting needs.
+...in a reproducible and more realistic way than using a service like [mockaroo](https://www.mockaroo.com/), using R and probabilities derived from actual data. This method still has some imperfections: see [faking data](#faking-data) for limitations.
 
-See [using the app](#using-the-app) for how to use the app. [Try the app](#try-the-app) or see [reproduce the app](#reproduce-the-app) to reproduce it locally. 💻
+
+In theory🎓this app can be adapted by anyone who keeps a timesheet of any sort (hobbies, projects, exercise) and wants to see some reporting on it. In practice 👊a lot of reworking might be needed unless one's a bookkeeper with similar client breakdown and reporting needs.
+
+See [using the app](#using-the-app) for how to use the app. [Try the app](#try-the-app) or see [reproduce the app](#reproduce-the-app) to run a local version. 💻
 
 
 ---
@@ -39,9 +38,7 @@ See [using the app](#using-the-app) for how to use the app. [Try the app](#try-t
 
 ## [Try the app](#try-the-app)
 
-Please give this free service a few seconds ⏳ to spin up the app. 🙏🏼
-
-[<p align="center"><img src="www/monty.png" width=100></p>](https://bigbangdata.shinyapps.io/timesheetanalysis/)</center>
+Please give [this free service](https://bigbangdata.shinyapps.io/timesheetanalysis/) a few seconds ⏳ to get up and... walking <img src="Www/ministry-of-silly-walks.gif" width=40>
 
 
 The app isn't super intuitive for the uninitiated... 🛐
@@ -63,6 +60,21 @@ The app isn't super intuitive for the uninitiated... 🛐
 
 ## [Using the app](#using-the-app)
 
+The app has two main tabs:
+
+<img src="www/example1.JPG" width=300>
+
+
+__Plots tab__
+
+
+_Dates_
+
+The `Year`, `Quarter`, and `Month` menus affect the `Start Date` and `End Date` date pickers and interact independently of each other. One must trigger an event by selecting a *different* value in one of these menus (re-selecting the same value won't affect the date pickers, alas).
+
+_Term_
+
+__Data & Downloads tab__
 
 
 ---
