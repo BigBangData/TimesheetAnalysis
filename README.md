@@ -38,7 +38,7 @@ See [using the app](#using-the-app) for how to use the app. [Try the app](#try-t
 
 ## [Try the app](#try-the-app)
 
-Please give [this free service](https://bigbangdata.shinyapps.io/timesheetanalysis/) a few seconds ⏳ to get up and... walking <img src="Www/ministry-of-silly-walks.gif" width=40>
+Please give [this free service](https://bigbangdata.shinyapps.io/timesheetanalysis/) a few seconds ⏳ to get up and... walking <img src="www/ministry-of-silly-walks.gif" width=40>
 
 
 The app isn't super intuitive for the uninitiated... 🛐
