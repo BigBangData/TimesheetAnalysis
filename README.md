@@ -16,7 +16,7 @@ I've been learning [shiny](https://shiny.rstudio.com/) with projects such as [th
 In `v1` of this project we used Excel as input-output. In `v2` we used Excel as input and a local shiny app as output. This project recreates `v2` with fake data...
 
 
-<center><img src="www/munchfakedata.jpg" width=150></center>
+<<p align="center"><img src="www/munchfakedata.jpg" width=150></p>
 
 
 ...in a reproducible and more realistic way than using a service like [mockaroo](https://www.mockaroo.com/) by using R and probabilities derived from actual data. This still has some imperfections (see [faking data](#faking-data)) but is good enough for the project.
@@ -41,7 +41,7 @@ See [using the app](#using-the-app) for how to use the app. [Try the app](#try-t
 
 Please give this free service a few seconds ⏳ to spin up the app. 🙏🏼
 
-[<center><img src="www/monty.png" width=100>](https://bigbangdata.shinyapps.io/timesheetanalysis/)</center>
+[<p align="center"><img src="www/monty.png" width=100></p>](https://bigbangdata.shinyapps.io/timesheetanalysis/)</center>
 
 
 The app isn't super intuitive for the uninitiated... 🛐
