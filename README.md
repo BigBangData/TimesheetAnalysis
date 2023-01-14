@@ -1,6 +1,11 @@
 # Timesheet Analysis
 
----
+![License](https://img.shields.io/github/license/BigBangData/TimesheetAnalysis)
+![File Count](https://img.shields.io/github/directory-file-count/BigBangData/TimesheetAnalysis)
+![Last Commit](https://img.shields.io/github/last-commit/BigBangData/TimesheetAnalysis?color=blueviolet)
+![Stars](https://img.shields.io/github/stars/BigBangData/TimesheetAnalysis?style=social)
+![Forks](https://img.shields.io/github/forks/BigBangData/TimesheetAnalysis?style=social)
+![Watchers](https://img.shields.io/github/watchers/BigBangData/TimesheetAnalysis?style=social)
 
 ## [Motivation](#motivation)
 
@@ -28,14 +33,14 @@ See [using the app](#using-the-app) for how to use the app. [Try the app](#try-t
 
 ## [Try the app](#try-the-app)
 
-<center>Please give this free service a few seconds ⏳ to spin up the app. 🙏🏼</center>
+Please give this free service a few seconds ⏳ to spin up the app. 🙏🏼
 
-[<center><img src="www/monty.png" width=40></center>](https://bigbangdata.shinyapps.io/timesheetanalysis/)
+[<img src="www/monty.png" width=40>](https://bigbangdata.shinyapps.io/timesheetanalysis/)
 
 
-Note that the app isn't 100% intuitive for the uninitiated... 🛐
+The app isn't super intuitive for the uninitiated... 🛐
 
-Select an appropriate time period 📅 before selecting a report:
+"Initiate" by selecting an appropriate time period 📅 before selecting a report:
 
 - `Sessions:` shorter periods for data; longer ones for plots
 - `Daily Hours:` from a week to a quarter
