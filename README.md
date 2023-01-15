@@ -71,7 +71,7 @@ There are 10 reports, see [details](#details) below for specific usage.
 
 The `Year`, `Quarter`, and `Month` menus affect the `Start Date` and `End Date` date pickers and interact independently of each other. One must trigger an event by selecting a *different* value in one of these menus (re-selecting the same value won't affect the date pickers).
 
-<p align="center"><img src="www/02_plots_dates.png" width=500></p>
+<p align="center"><img src="www/02_plots_dates.png" width=650></p>
 
 `Term` is the billing cycle: clients pay once a month or once a quarter. The "biz" option is to log unpaid activities related to the bookkeeper's business, such as learning a new niche or tool.
 
