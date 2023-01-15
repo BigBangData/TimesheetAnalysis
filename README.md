@@ -67,16 +67,15 @@ __Plots__
 
 There are 10 reports, see [details](#details) below for specific usage.
 
-
-<img src="www/ex2.jpg" width=180>
+<img src="www/01_plots_reports.jpg" width=180>
 
 The `Year`, `Quarter`, and `Month` menus affect the `Start Date` and `End Date` date pickers and interact independently of each other. One must trigger an event by selecting a *different* value in one of these menus (re-selecting the same value won't affect the date pickers).
 
-<img src="www/ex3.png" width=550>
+<img src="www/02_plots_dates.png" width=550>
 
 `Term` is the billing cycle: clients pay once a month or once a quarter. The "biz" option is to log unpaid activities related to the bookkeeper's business, such as learning a new niche or tool.
 
-<img src="www/ex4.jpg" width=180>
+<img src="www/03_plots_term.jpg" width=180>
 
 `Client Group` affects the `Client Code` and helps pick specific groups such as deselecting all to pick a particular client, or picking those with a billing `Type`.
 
@@ -84,10 +83,11 @@ There are two types:
 - __flat rate__ -fixed rate paid at the start of a term
 - __hourly__ - variable rate paid at the end of a term, based on hours worked
 
+<img src="www/04_plots_clients.jpg" width=180>
 
 Again, "biz" is treated as a "client" of sorts. All other codes identify actual paying clients. In this project I faked the codes with some Nasdaq symbols of a few companies you might have heard about in the (fake?) news.
 
-<img src="www/ex5.jpg" width=180>
+
 
 ```
 ```
@@ -96,10 +96,10 @@ __Data & Downloads tab__
 
 In this tab one can view and download the data and plot selected in the `Plots` tab.
 
-<img src="www/ex6.jpg" width=180>
+<img src="www/05_data_menu.jpg" width=180>
 
 
-The data is downloaded as CSV and the plots as PNG with a few customizations possible, which might come in handy depending on the plot. In particular, the "Daily Hours by Client" report will only work well on-screen for a period of about two weeks, but if a month is desired one can download a long PNG using 16" height by 10" width (see [demo](#demo)).
+The data downloads as CSV and the plots as PNG with a few customizations possible, which might come in handy depending on the plot. In particular, the "Daily Hours by Client" report will only work well on the screen for a period of about two weeks, but if a month is desired one can download a long PNG using 16" height by 10" width (see [demo](#demo)).
 
 ```
 ```
@@ -110,36 +110,79 @@ __1. Sessions__
 
 Session data is unaggregated data at the level of a work session. It combines two Excel tabs (in our fake data case, two CSV files): __Clients__ and __Timesheet__.
 
-__Clients__ is a more static, small table at the client-level, where `code` ("client code") is the primary key:
+__Clients__ is a more static, small table at the client-level:
+- `code` - client code, the primary key (unique per client)
+- `term` - monthly, quarterly (or biz as proxy for none)
+- `type` - flat rate, hourly (or biz as proxy for none)
+- `rate` - the actual payment, in dollars
 
-<img src="www/ex8.jpg" width=200>
+As an example, if a client is quarterly and hourly (a bad choice!), the bookkeeper will be paid at the end of the quarter for all the hours worked in that quarter, given the hourly rate.
 
-__Timesheeet___ is a more dymanic, long dataset which is the bookeeper's daily manual timesheet entries:
+__Timesheeet__ is a more dymanic, long dataset at the session-level, containing the bookeeper's manual timesheet entries:
 
-<img src="www/ex7.jpg" width=400>
+- `date` - the date
+- `clock_in` - the start time of a work session
+- `clock_out` - the end time of a work session
+- `code` - the client code
+- `notes` - notes related to that session
+- `tags` - any tags for easier categorization of tasks
 
-There is a variety of plots that could be made with data at this level, but the most useful was the boxplot comparison with a `geom_jitter` layer of dots to show not just the distribution of hours worked but also the volume of sessions for each client, given a period.
 
+There is a variety of plots that could be made with data at this level, but the most useful we found was a boxplot comparison with a `geom_jitter` layer of dots to show not just the distribution of hours worked but also the volume of sessions for each client, given a period.
 
 
 __2. Daily Hours__
 
+The simplest aggregation simply calculates total hours worked each day and an average hours worked (in work days) for the period selected. The barplot-timeseries was a bit tricky as I wanted to capture non workdays as well. This helps with the bookkeeper's overall tracking of their hours, not specific reporting of client hours.
+
 __3. Daily Hours by Client__
+
+
+This is the solution for specific client hours and a comparison of monthly vs quarterly clients and one's own business hours. It is a panel grid where each panel is a working day. If more than 8 working days are chosen it splits into two columns of panels. This is the plot that can get overloaded with days on screen but can be downloaded in tall format if an entire month is desired.
+
 
 __4. Monthly Hours__
 
+A simple rollup of the "Daily Hours" report - it's NOT for only monthly clients, it's for all clients (including "biz").
+
 __5. Quarterly Hours__
+
+A simple rollup of the "Daily Hours" report - it's NOT for only quarterly clients, it's for all clients (including "biz").
 
 __6. Monthly Clients__
 
+This report is specific for monthly clients (🕵️ the name) and needs a single month selected. It is a scatterplot of revenue by average (mean) hourly rate per client, color-coded by "hours worked" which is factored (bucketed) by quantiles.... this merits a visual:
+
+<img src="www/06_monthly_clients.jpg">
+
+We see that for Dec. 2022, my fake bookkeeper got the most revenue working on Nvidia's books, but that's partly because they went over the 75% quantile (5.2hs, given the period/clients) and so the mean hourly rate`*` is just slightly above average ($109.4). 
+
+On the flipside, the best bang-for-her-buck was working for Johnson & Johnson, but the workload was a bit light so the revenue isn't that great...
+
+[TO DO - add an average revenue horizontal dotted line!]
+
+`*` which is __100% correlated__ 😅 with hours worked and the rate so we can expect to see a cone of blue clients emanating from the origin of the graph and red clients in the top-left and green clients in the bottom-right
+
+
 __7. Quarterly Clients__
+
+Same as "Monthly Clients" for quarterly clients.`*`
+
+<p align="center"><img src="www/obama_mic_drop.gif" width=400></p>
+
+`*` needs a single quarter ♩ selected...
 
 __8. Month Report__
 
+Revenue and mean hourly rates for monthly clients.
+
 __9. Quarter Report__
+
+Revenue and mean hourly rates for quarterly clients.
 
 __10. Annual Report__
 
+This report almost works better in the data tab, as a multi-grain breakdown of monthly and quarterly clients with annual rollups and an annual rollup of revenue and mean hourly rate. The plots tab shows something that can't be easily gleaned in the data tab, which is the relative comparison for each dimension (avg. hourly rate, hours worked, revenue) and client term in each quarter. To ease the visual overload of bars I created a grid of quarters-by-quarters.
 
 ---
 
