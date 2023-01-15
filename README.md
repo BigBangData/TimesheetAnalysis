@@ -56,7 +56,7 @@ The app isn't super intuitive for the uninitiated... 🛐
 
 ## [Using the app](#using-the-app)
 
-### [Overview](#app-overview)
+### [Overview](#overview)
 
 The app has two main tabs:
 
@@ -68,7 +68,7 @@ __Plots tab__
 
 <img src="www/ex2.jpg" width=180>
 
-There are 10 possible reports, see [details](#app-details) below for specific usage.
+There are 10 possible reports, see [details](#details) below for specific usage.
 
 
 <img src="www/ex3.png" width=550>
@@ -93,7 +93,7 @@ In this tab one can view and download the data and plot selected in the `Plots` 
 
 The data is downloaded as CSV and the plot as PNG with a few customizations possible, which might come in handy depending on the plot.
 
-### [Details](#app-details)
+### [Details](#details)
 
 
 ---
