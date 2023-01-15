@@ -58,9 +58,7 @@ The app isn't super intuitive for the uninitiated... 🛐
 
 ### [Overview](#overview)
 
-The app has two main tabs:
-
-<img src="www/ex1.jpg" width=330>
+The app has two main tabs: <img src="www/ex1.jpg" width=350>
 
 
 __Plots tab__
