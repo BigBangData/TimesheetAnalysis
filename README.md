@@ -67,15 +67,15 @@ __Plots__
 
 There are 10 reports, see [details](#details) below for specific usage.
 
-<img src="www/01_plots_reports.jpg" width=180>
+<p align="center"><img src="www/01_plots_reports.png" width=400></p>
 
 The `Year`, `Quarter`, and `Month` menus affect the `Start Date` and `End Date` date pickers and interact independently of each other. One must trigger an event by selecting a *different* value in one of these menus (re-selecting the same value won't affect the date pickers).
 
-<img src="www/02_plots_dates.png" width=550>
+<p align="center"><img src="www/02_plots_dates.png" width=400></p>
 
 `Term` is the billing cycle: clients pay once a month or once a quarter. The "biz" option is to log unpaid activities related to the bookkeeper's business, such as learning a new niche or tool.
 
-<img src="www/03_plots_term.jpg" width=180>
+<p align="center"><img src="www/03_plots_term.jpg" width=150></p>
 
 `Client Group` affects the `Client Code` and helps pick specific groups such as deselecting all to pick a particular client, or picking those with a billing `Type`.
 
@@ -83,7 +83,7 @@ There are two types:
 - __flat rate__ -fixed rate paid at the start of a term
 - __hourly__ - variable rate paid at the end of a term, based on hours worked
 
-<img src="www/04_plots_clients.jpg" width=180>
+<p align="center"><img src="www/04_plots_clients.jpg" width=150></p>
 
 Again, "biz" is treated as a "client" of sorts. All other codes identify actual paying clients. In this project I faked the codes with some Nasdaq symbols of a few companies you might have heard about in the (fake?) news.
 
@@ -96,7 +96,7 @@ __Data & Downloads tab__
 
 In this tab one can view and download the data and plot selected in the `Plots` tab.
 
-<img src="www/05_data_menu.jpg" width=180>
+<p align="center"><img src="www/05_data_menu.png" width=400></p>
 
 
 The data downloads as CSV and the plots as PNG with a few customizations possible, which might come in handy depending on the plot. In particular, the "Daily Hours by Client" report will only work well on the screen for a period of about two weeks, but if a month is desired one can download a long PNG using 16" height by 10" width (see [demo](#demo)).
