@@ -1,7 +1,6 @@
 # TO DO
-# 1. fix long days, possibly rethink faking data into it's own tab to fake data
-# 2. create README, note limitations (no variable rates, plot restrictions)
-# 3. make gif, add to portfolio
+# 1. update README with higher-level biz considerations: limitations (no variable rates)
+# 2. add to portfolio
 
 # Notes:
 # To deploy (initial or otherwise), run: library(rsconnect); DeployApp()
@@ -614,9 +613,9 @@ plot_colbars <- function(dfm, total_row, title) {
     g <- g +
         theme_bw(base_size = 16) +
         ggtitle(title
-            , subtitle = paste0("Annual Revenue: ", annual_rev
-                , " | Quarterly Clients: ", quarter_rev
-                , " | Monthly Clients: ", month_rev
+            , subtitle = paste0("Annual Revenue: $", annual_rev
+                , " | Quarterly Clients: $", quarter_rev
+                , " | Monthly Clients: $", month_rev
                 )) +
         labs(x = "", y = "%") +
         theme(plot.title = element_text(size = 22)
@@ -807,18 +806,15 @@ plot_client_scatter <- function(dfm, total_row, title) {
                     , ifelse(dfm$tot_hs <= qt75, '#063970' # blue
                     , '#C02403')) # red
     mean_hs <- round(mean(dfm$tot_hs), 1)
+    mean_rev <- round(mean(dfm$rate), 1)
     # prep base scatterplot + avg line for mean hourly rate
     g <- ggplot(dfm, aes(x=avg_hourly_rate, y=rate)) +
             geom_point(color = 'red') +
             theme_classic(base_size = 16) +
             geom_vline(xintercept = total_row$avg_hourly_rate
+                , col = "black", linetype = "dotted", size = 1.2) +
+            geom_hline(yintercept = mean_rev
                 , col = "black", linetype = "dotted", size = 1.2)
-            # avoid, text may conflict with data point labels
-            # annotate("text"
-            #     , x=total_row$avg_hourly_rate - max(dfm$avg_hourly_rate)/50
-            #     , y=max(dfm$rate) *.75
-            #     , label=paste0("Avg. Rate ($", total_row$avg_hourly_rate, ")")
-            #     , angle=90, size=6, color="black")
     # plot out with labels that repel
     g <- g +
         geom_label_repel(aes(label = code)
@@ -827,10 +823,11 @@ plot_client_scatter <- function(dfm, total_row, title) {
             , size = 6) +
         ggtitle(title,
             subtitle = paste0(
-                "Avg. Hours Worked: ", mean_hs, " hs"
-                , " | Red = above 75% quantile: ", qt75, " hs"
-                , " | Green = below 25% quantile: ", qt25, " hs"
-                , " | Avg. Rate: $", total_row$avg_hourly_rate)) +
+                "Avg. Hours Worked: ", mean_hs
+                , " hs (Red is > ", qt75
+                , " hs; Green is < ", qt25
+                , " hs) | Avg. Rate: $", total_row$avg_hourly_rate
+                , " | Avg. Revenue: $", mean_rev)) +
         labs(x = "Avg. Hourly Rate ($)", y = "Revenue ($)") +
         theme(plot.title = element_text(size = 22)
             , plot.subtitle = element_text(size = 18)

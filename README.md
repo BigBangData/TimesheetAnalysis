@@ -15,7 +15,7 @@ I've been learning [shiny](https://shiny.rstudio.com/) with projects such as [th
 
 In `v1` of this project we used Excel as input-output to an R script. In `v2` we used Excel as input and a local shiny app as output. This public-facing `v3` of the project recreates the shiny app with fake data...
 
-<p align="center"><img src="www/munchfakedata.jpg" width=180></p>
+<p align="center"><img src="www/munchfakedata.jpg" width=150></p>
 
 
 ...in a reproducible and more realistic way than using a service like [mockaroo](https://www.mockaroo.com/), using R and probabilities derived from actual data. This method still has some imperfections: see [faking data](#faking-data) for limitations.
@@ -151,30 +151,32 @@ A simple rollup of the "Daily Hours" report - it's NOT for only quarterly client
 
 __6. Monthly Clients__
 
-This report is specific for monthly clients (🕵️ the name) and needs a single month selected. It is a scatterplot of revenue by average (mean) hourly rate per client, color-coded by "hours worked" which is factored (bucketed) by quantiles.... this merits a visual:
+This report (and the next) help the bookkeeper assess the trade-offs of keeping a client around with high volume of work for less pay per hour vs focusing on clients with a higher pay rate but less work (so less revenue).
 
-<img src="www/06_monthly_clients.jpg">
+The report is specific to monthly clients (🕵️ the name) and as such requires the user to first select a single month. It is a scatterplot of revenue by average (mean) hourly rate per client, color-coded by "hours worked" which is factored (bucketed) using quantiles.... this merits a visual:
+
+<p align=center><img src="www/06_monthly_clients.png" width=400></p>
 
 We see that for Dec. 2022, my fake bookkeeper got the most revenue working on Nvidia's books, but that's partly because they went over the 75% quantile (5.2hs, given the period/clients) and so the mean hourly rate`*` is just slightly above average ($109.4). 
 
-On the flipside, the best bang-for-her-buck was working for Johnson & Johnson, but the workload was a bit light so the revenue isn't that great...
+On the flipside, the best rate-per-hour that month (for monthly clients) was achieved working on Johnson & Johnson's books, but the workload was a bit light so the revenue is below the average ($411.98).
 
-[TO DO - add an average revenue horizontal dotted line!]
 
-`*` which is __100% correlated__ 😅 with hours worked and the rate so we can expect to see a cone of blue clients emanating from the origin of the graph and red clients in the top-left and green clients in the bottom-right
+`*` which is __100% correlated__ 😅 with hours worked and the rate so we can expect to see a cone of blue clients emanating from the origin of the graph and red clients in the top-left and green clients in the bottom-right.
 
 
 __7. Quarterly Clients__
 
-Same as "Monthly Clients" for quarterly clients.`*`
+Same as "Monthly Clients", for quarterly clients.
 
 <p align="center"><img src="www/obama_mic_drop.gif" width=400></p>
 
-`*` needs a single quarter ♩ selected...
 
 __8. Month Report__
 
 Revenue and mean hourly rates for monthly clients.
+
+<p align=center><img src="www/07_month_report.png" width=400></p>
 
 __9. Quarter Report__
 
@@ -182,7 +184,13 @@ Revenue and mean hourly rates for quarterly clients.
 
 __10. Annual Report__
 
-This report almost works better in the data tab, as a multi-grain breakdown of monthly and quarterly clients with annual rollups and an annual rollup of revenue and mean hourly rate. The plots tab shows something that can't be easily gleaned in the data tab, which is the relative comparison for each dimension (avg. hourly rate, hours worked, revenue) and client term in each quarter. To ease the visual overload of bars I created a grid of quarters-by-quarters.
+This report almost works better in the data tab, as a multi-grain breakdown of monthly and quarterly clients with annual rollups and an annual rollup of revenue and mean hourly rate. 
+
+<p align=center><img src="www/08_annual_report_data.png" width=400></p>
+
+The plots tab shows something that can't be easily gleaned in the data tab, which is the relative comparison for each dimension (avg. hourly rate, hours worked, revenue) and client term in each quarter. To ease the visual overload of bars I created a grid of quarters-by-quarters.
+
+<p align=center><img src="www/09_annual_report_plot.png" width=400></p>
 
 ---
 
