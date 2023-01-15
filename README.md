@@ -15,7 +15,7 @@ I've been learning [shiny](https://shiny.rstudio.com/) with projects such as [th
 
 In `v1` of this project we used Excel as input-output to an R script. In `v2` we used Excel as input and a local shiny app as output. This public-facing `v3` of the project recreates the shiny app with fake data...
 
-<p align="center"><img src="www/munchfakedata.jpg" width=150></p>
+<p align="center"><img src="www/munchfakedata.jpg" width=200></p>
 
 
 ...in a reproducible and more realistic way than using a service like [mockaroo](https://www.mockaroo.com/), using R and probabilities derived from actual data. This method still has some imperfections: see [faking data](#faking-data) for limitations.
@@ -67,15 +67,15 @@ __Plots__
 
 There are 10 reports, see [details](#details) below for specific usage.
 
-<p align="center"><img src="www/01_plots_reports.png" width=400></p>
+<p align="center"><img src="www/01_plots_reports.png" width=550></p>
 
 The `Year`, `Quarter`, and `Month` menus affect the `Start Date` and `End Date` date pickers and interact independently of each other. One must trigger an event by selecting a *different* value in one of these menus (re-selecting the same value won't affect the date pickers).
 
-<p align="center"><img src="www/02_plots_dates.png" width=400></p>
+<p align="center"><img src="www/02_plots_dates.png" width=500></p>
 
 `Term` is the billing cycle: clients pay once a month or once a quarter. The "biz" option is to log unpaid activities related to the bookkeeper's business, such as learning a new niche or tool.
 
-<p align="center"><img src="www/03_plots_term.jpg" width=150></p>
+<p align="center"><img src="www/03_plots_term.jpg" width=200></p>
 
 `Client Group` affects the `Client Code` and helps pick specific groups such as deselecting all to pick a particular client, or picking those with a billing `Type`.
 
@@ -83,7 +83,7 @@ There are two types:
 - __flat rate__ -fixed rate paid at the start of a term
 - __hourly__ - variable rate paid at the end of a term, based on hours worked
 
-<p align="center"><img src="www/04_plots_clients.jpg" width=150></p>
+<p align="center"><img src="www/04_plots_clients.jpg" width=200></p>
 
 Again, "biz" is treated as a "client" of sorts. All other codes identify actual paying clients. In this project I faked the codes with some Nasdaq symbols of a few companies you might have heard about in the (fake?) news.
 
@@ -96,7 +96,7 @@ __Data & Downloads tab__
 
 In this tab one can view and download the data and plot selected in the `Plots` tab.
 
-<p align="center"><img src="www/05_data_menu.png" width=400></p>
+<p align="center"><img src="www/05_data_menu.png" width=550></p>
 
 
 The data downloads as CSV and the plots as PNG with a few customizations possible, which might come in handy depending on the plot. In particular, the "Daily Hours by Client" report will only work well on the screen for a period of about two weeks, but if a month is desired one can download a long PNG using 16" height by 10" width (see [demo](#demo)).
@@ -155,7 +155,7 @@ This report (and the next) help the bookkeeper assess the trade-offs of keeping 
 
 The report is specific to monthly clients (🕵️ the name) and as such requires the user to first select a single month. It is a scatterplot of revenue by average (mean) hourly rate per client, color-coded by "hours worked" which is factored (bucketed) using quantiles.... this merits a visual:
 
-<p align=center><img src="www/06_monthly_clients.png" width=400></p>
+<p align=center><img src="www/06_monthly_clients.png" width=600></p>
 
 We see that for Dec. 2022, my fake bookkeeper got the most revenue working on Nvidia's books, but that's partly because they went over the 75% quantile (5.2hs, given the period/clients) and so the mean hourly rate`*` is just slightly above average ($109.4). 
 
@@ -169,14 +169,14 @@ __7. Quarterly Clients__
 
 Same as "Monthly Clients", for quarterly clients.
 
-<p align="center"><img src="www/obama_mic_drop.gif" width=400></p>
+<p align="center"><img src="www/obama_mic_drop.gif" width=300></p>
 
 
 __8. Month Report__
 
 Revenue and mean hourly rates for monthly clients.
 
-<p align=center><img src="www/07_month_report.png" width=400></p>
+<p align=center><img src="www/07_month_report.png" width=600></p>
 
 __9. Quarter Report__
 
@@ -186,11 +186,11 @@ __10. Annual Report__
 
 This report almost works better in the data tab, as a multi-grain breakdown of monthly and quarterly clients with annual rollups and an annual rollup of revenue and mean hourly rate. 
 
-<p align=center><img src="www/08_annual_report_data.png" width=400></p>
+<p align=center><img src="www/08_annual_report_data.png" width=600></p>
 
 The plots tab shows something that can't be easily gleaned in the data tab, which is the relative comparison for each dimension (avg. hourly rate, hours worked, revenue) and client term in each quarter. To ease the visual overload of bars I created a grid of quarters-by-quarters.
 
-<p align=center><img src="www/09_annual_report_plot.png" width=400></p>
+<p align=center><img src="www/09_annual_report_plot.png" width=600></p>
 
 ---
 
