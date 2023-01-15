@@ -58,40 +58,87 @@ The app isn't super intuitive for the uninitiated... 🛐
 
 ### [Overview](#overview)
 
-The app has two main tabs: <img src="www/ex1.jpg" width=350>
+The app has two main tabs:
+1. __Plots__ visualizes the data selected through various menu options
+2. __Data & Downloads__ shows the data and a menu of download options
 
 
-__Plots tab__
+__Plots__
+
+There are 10 reports, see [details](#details) below for specific usage.
 
 
 <img src="www/ex2.jpg" width=180>
 
-There are 10 possible reports, see [details](#details) below for specific usage.
-
+The `Year`, `Quarter`, and `Month` menus affect the `Start Date` and `End Date` date pickers and interact independently of each other. One must trigger an event by selecting a *different* value in one of these menus (re-selecting the same value won't affect the date pickers).
 
 <img src="www/ex3.png" width=550>
 
-The `Year`, `Quarter`, and `Month` menus affect the `Start Date` and `End Date` date pickers and interact independently of each other. One must trigger an event by selecting a *different* value in one of these menus (re-selecting the same value won't affect the date pickers).
+`Term` is the billing cycle: clients pay once a month or once a quarter. The "biz" option is to log unpaid activities related to the bookkeeper's business, such as learning a new niche or tool.
 
 <img src="www/ex4.jpg" width=180>
 
-The `Term` is the billing cycle: clients pay once a month or once a quarter. The "biz" option is to look at one's own business, which does not have a term - in other words, a bookkeeper might spend time learning new tools which helps her business in general and no client or client group in particular.
+`Client Group` affects the `Client Code` and helps pick specific groups such as deselecting all to pick a particular client, or picking those with a billing `Type`.
+
+There are two types:
+- __flat rate__ -fixed rate paid at the start of a term
+- __hourly__ - variable rate paid at the end of a term, based on hours worked
+
+
+Again, "biz" is treated as a "client" of sorts. All other codes identify actual paying clients. In this project I faked the codes with some Nasdaq symbols of a few companies you might have heard about in the (fake?) news.
 
 <img src="www/ex5.jpg" width=180>
 
-`Client Group` affects the `Client Code` and helps pick specific groups such as deselecting all to pick a particular client, or picking those with a billing `Type` such as "flat rate" (a set rate paid at the start of a `Term`), or "hourly" (a variable rate paid at the end of a `Term` based on hours worked).
-
-Again "biz" is treated as a "client" of sorts (without a rate). All other codes identify a actual paying clients. In this project I faked the codes with some Nasdaq symbols of a few companies you might have heard about in the (fake?) news.
+```
+```
 
 __Data & Downloads tab__
 
-<img src="www/ex6.jpg" width=180>
-
 In this tab one can view and download the data and plot selected in the `Plots` tab.
 
-The data is downloaded as CSV and the plot as PNG with a few customizations possible, which might come in handy depending on the plot.
+<img src="www/ex6.jpg" width=180>
 
+
+The data is downloaded as CSV and the plots as PNG with a few customizations possible, which might come in handy depending on the plot. In particular, the "Daily Hours by Client" report will only work well on-screen for a period of about two weeks, but if a month is desired one can download a long PNG using 16" height by 10" width (see [demo](#demo)).
+
+```
+```
 ### [Details](#details)
+
+__1. Sessions__
+
+
+Session data is unaggregated data at the level of a work session. It combines two Excel tabs (in our fake data case, two CSV files): __Clients__ and __Timesheet__.
+
+__Clients__ is a more static, small table at the client-level, where `code` ("client code") is the primary key:
+
+<img src="www/ex8.jpg" width=200>
+
+__Timesheeet___ is a more dymanic, long dataset which is the bookeeper's daily manual timesheet entries:
+
+<img src="www/ex7.jpg" width=400>
+
+There is a variety of plots that could be made with data at this level, but the most useful was the boxplot comparison with a `geom_jitter` layer of dots to show not just the distribution of hours worked but also the volume of sessions for each client, given a period.
+
+
+
+__2. Daily Hours__
+
+__3. Daily Hours by Client__
+
+__4. Monthly Hours__
+
+__5. Quarterly Hours__
+
+__6. Monthly Clients__
+
+__7. Quarterly Clients__
+
+__8. Month Report__
+
+__9. Quarter Report__
+
+__10. Annual Report__
 
 
 ---
