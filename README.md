@@ -11,7 +11,7 @@
 
 My wife owns a bookkeeping 📚 business and we found some ways for me to help her automate and analyze 📈 things.
 
-I've been learning [shiny](https://shiny.rstudio.com/) with projects such as [this](https://bigbangdata.shinyapps.io/shinyapp/) and thought it'd be a good tool for her since downloading and running R is more user-friendly to non-programmers than the whole python 🐍🐍🐍 ecosystem and running a local app is better for security 🔐and privacy.
+I've been learning [shiny](https://shiny.rstudio.com/) with projects such as [this](https://bigbangdata.shinyapps.io/shinyapp/) and thought it'd be a good tool for her since downloading and running R is more user-friendly to non-programmers than the whole Python 🐍🐍🐍 ecosystem and running a local app is better for security 🔐and privacy.
 
 In `v1` of this project we used Excel as input-output to an R script. In `v2` we used Excel as input and a local shiny app as output. This public-facing `v3` of the project recreates the shiny app with fake data...
 
@@ -25,21 +25,17 @@ In theory🎓this app can be adapted by anyone who keeps a timesheet of any sort
 
 See [using the app](#using-the-app) for how to use the app. [Try the app](#try-the-app) or see [reproduce the app](#reproduce-the-app) to run a local version. 💻
 
-
 ---
 
 ## [Demo](#demo)
 
-
-
-
+<img src="www/demo.gif">
 
 ---
 
 ## [Try the app](#try-the-app)
 
-Please give [this free service](https://bigbangdata.shinyapps.io/timesheetanalysis/) a few seconds ⏳ to get up and... walking <img src="www/ministry-of-silly-walks.gif" width=60>
-
+Please give [this free service](https://bigbangdata.shinyapps.io/timesheetanalysis/) a few seconds ⏳ to get up and... walking <img src="www/ministry-of-silly-walks.gif" width=40>
 
 The app isn't super intuitive for the uninitiated... 🛐
 
@@ -75,7 +71,7 @@ __Plots tab__
 There are 10 possible reports, see [details](#app-details) below for specific usage.
 
 
-<img src="www/bitmap.png" width=550>
+<img src="www/ex3.png" width=550>
 
 The `Year`, `Quarter`, and `Month` menus affect the `Start Date` and `End Date` date pickers and interact independently of each other. One must trigger an event by selecting a *different* value in one of these menus (re-selecting the same value won't affect the date pickers).
 
