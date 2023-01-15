@@ -75,7 +75,7 @@ __Plots tab__
 There are 10 possible reports, see [details](#app-details) below for specific usage.
 
 
-<img src="www/ex3.png" width=550>
+<img src="www/bitmap.png" width=550>
 
 The `Year`, `Quarter`, and `Month` menus affect the `Start Date` and `End Date` date pickers and interact independently of each other. One must trigger an event by selecting a *different* value in one of these menus (re-selecting the same value won't affect the date pickers).
 
