@@ -240,7 +240,7 @@ DeployApp()
 
 - Tip: the app's name (url) will be the name of the folder where `app.R` is located
 
-If your day is ruined by `runApp()` and `DeployApp()`...
+If your day is ruined by `runApp()` and `DeployApp()` like mine:
 
 <p align=center><img src="www/standards.jpg" width=400></p>
 
