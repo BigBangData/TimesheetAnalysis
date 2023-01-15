@@ -197,6 +197,52 @@ The plots tab shows something that can't be easily gleaned in the data tab, whic
 ## [Reproduce the app](#reproduce-the-app)
 
 
+To reproduce, clone this repo and follow these steps, which for the most part should ensure reproducibility:
+1. Download R from [CRAN](https://cran.r-project.org/) for your machine and platform
+2. Open R and install the following packages by issuing in the Console:
+
+```
+install.packages('dplyr')
+install.packages('tidyr')
+install.packages('DT')
+install.packages('ggplot2')
+install.packages('ggrepel')
+install.packages('lubridate')
+install.packages('shiny')
+```
+
+3. Set your working directory to the same directory as where you cloned this project, for ex.:
+
+```
+setwd("../Github/TimesheetAnalysis/")
+```
+
+- Tip: issue `getwd()` to find out where R runs from by default
+
+
+4. Test running the app locally by loading `shiny` and running the `runApp()` command:
+
+```
+library(shiny)
+runApp()
+```
+
+- Tip: stop the app with `ESC`
+
+5. Deploy the app by installing `rsconnect` and issuing:
+
+```
+install.packages('rsconnect')
+library(rsconnect)
+DeployApp()
+
+```
+
+- Tip: the app's name (url) will be the name of the folder where `app.R` is located
+
+
+
+
 ---
 ## [Faking data](#faking-data)
 
