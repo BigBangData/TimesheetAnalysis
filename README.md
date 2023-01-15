@@ -67,7 +67,7 @@ __Plots__
 
 There are 10 reports, see [details](#details) below for specific usage.
 
-<p align="center"><img src="www/01_plots_reports.png" width=550></p>
+<img src="www/01_plots_reports.png">
 
 The `Year`, `Quarter`, and `Month` menus affect the `Start Date` and `End Date` date pickers and interact independently of each other. One must trigger an event by selecting a *different* value in one of these menus (re-selecting the same value won't affect the date pickers).
 
@@ -96,7 +96,7 @@ __Data & Downloads tab__
 
 In this tab one can view and download the data and plot selected in the `Plots` tab.
 
-<p align="center"><img src="www/05_data_menu.png" width=550></p>
+<img src="www/05_data_menu.png">
 
 
 The data downloads as CSV and the plots as PNG with a few customizations possible, which might come in handy depending on the plot. In particular, the "Daily Hours by Client" report will only work well on the screen for a period of about two weeks, but if a month is desired one can download a long PNG using 16" height by 10" width (see [demo](#demo)).
@@ -155,7 +155,7 @@ This report (and the next) help the bookkeeper assess the trade-offs of keeping 
 
 The report is specific to monthly clients (🕵️ the name) and as such requires the user to first select a single month. It is a scatterplot of revenue by average (mean) hourly rate per client, color-coded by "hours worked" which is factored (bucketed) using quantiles.... this merits a visual:
 
-<p align=center><img src="www/06_monthly_clients.png" width=600></p>
+<img src="www/06_monthly_clients.png">
 
 We see that for Dec. 2022, my fake bookkeeper got the most revenue working on Nvidia's books, but that's partly because they went over the 75% quantile (5.2hs, given the period/clients) and so the mean hourly rate`*` is just slightly above average ($109.4). 
 
@@ -176,7 +176,7 @@ __8. Month Report__
 
 Revenue and mean hourly rates for monthly clients.
 
-<p align=center><img src="www/07_month_report.png" width=600></p>
+<img src="www/07_month_report.png">
 
 __9. Quarter Report__
 
@@ -186,11 +186,11 @@ __10. Annual Report__
 
 This report almost works better in the data tab, as a multi-grain breakdown of monthly and quarterly clients with annual rollups and an annual rollup of revenue and mean hourly rate. 
 
-<p align=center><img src="www/08_annual_report_data.png" width=600></p>
+<img src="www/08_annual_report_data.png">
 
 The plots tab shows something that can't be easily gleaned in the data tab, which is the relative comparison for each dimension (avg. hourly rate, hours worked, revenue) and client term in each quarter. To ease the visual overload of bars I created a grid of quarters-by-quarters.
 
-<p align=center><img src="www/09_annual_report_plot.png" width=600></p>
+<img src="www/09_annual_report_plot.png">
 
 ---
 
