@@ -168,7 +168,6 @@ dfs$session_mins[cond] <- floor(dfs$session_mins[cond]/4)
 # do it again if necessary
 cond <- (dfs$num_sessions >= 15 & dfs$session_mins >= 40)
 if (length(dfs$session_mins[cond]) > 0) {
-    cond <- (dfs$num_sessions >= 15 & dfs$session_mins >= 40)
     dfs$session_mins[cond] <- floor(dfs$session_mins[cond]/4)
 }
 

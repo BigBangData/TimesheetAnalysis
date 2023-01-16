@@ -246,7 +246,7 @@ To merely recreate the CSV files in the `data` directory, delete those files and
 ```
 source("faking_data/fake_data.R")
 ```
-<p align=center><img src="www/grusplans_meme.jpg" width=400></p>
+<p align=center><img src="www/grusplans_meme.jpg" width=450></p>
 
 ### Date-level Fakery
 
@@ -274,7 +274,7 @@ Perhaps the most complex part is to recreate the `session durations` which are h
 2. reducing the length of long sessions for days with lots of sessions
 3. repeating step 2 if there were still long sessions in those days
 
-<p align=center><img src="www/13_fake_session_durations.jpg" width=550></p>
+<p align=center><img src="www/13_fake_session_durations.jpg" width=600></p>
 
 
 Even after all this, I had to make sure the `date` field was representative of the `date started` and not the `date ended` work for days that might go over midnight.
