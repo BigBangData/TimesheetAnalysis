@@ -220,7 +220,7 @@ runApp()
 
 - Tip: stop the app with `ESC`
 
-5. Deploy the app by installing `rsconnect` and issuing:
+5. Deploy the app 🚀 by installing `rsconnect` and issuing:
 
 ```
 install.packages('rsconnect')
@@ -230,6 +230,8 @@ deployApp()
 ```
 
 - Tip: the app's name (url) will be the name of the folder where `app.R` is located
+
+<p align=center><img src="www/deploy_meme.jpg" width=200></p>
 
 
 ---
@@ -244,8 +246,10 @@ To merely recreate the CSV files in the `data` directory, delete those files and
 ```
 source("faking_data/fake_data.R")
 ```
+<p align=center><img src="www/grusplans_meme.jpg" width=400></p>
 
 ### Date-level Fakery
+
 
 To develop new fake data start with deciding which years you want on lines 25, 26:
 
