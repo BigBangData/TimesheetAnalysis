@@ -253,7 +253,7 @@ source("faking_data/fake_data.R")
 
 To develop new fake data start with deciding which years you want on lines 25, 26:
 
-<p align=center><img src="www/10_fake_years.jpg" width=550></p>
+<p align=center><img src="www/10_fake_years.jpg" width=450></p>
 
 The next decision is the proportion of work days to non-work days, which is set at 30% in line 38. This is a bit more than having weekends off, however, of the limitations of the script is that I decided (much like a bookkeeper I know 😉) not to limit workdays to weekdays:
 
@@ -274,7 +274,7 @@ Perhaps the most complex part is to recreate the `session durations` which are h
 2. reducing the length of long sessions for days with lots of sessions
 3. repeating step 2 if there were still long sessions in those days
 
-<p align=center><img src="www/13_fake_session_durations.jpg" width=600></p>
+<img src="www/13_fake_session_durations.jpg">
 
 
 Even after all this, I had to make sure the `date` field was representative of the `date started` and not the `date ended` work for days that might go over midnight.
