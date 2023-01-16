@@ -1,0 +1,10 @@
+Deploying bundle: 6737505 for application: 7966812 ...
+Waiting for task: 1264751383
+  building: Building image: 7939973
+  building: Fetching packages
+  building: Installing packages
+  building: Installing files
+  building: Pushing image: 7939973
+  deploying: Starting instances
+  unstaging: Stopping old instances
+Application successfully deployed to https://bigbangdata.shinyapps.io/timesheetanalysis/

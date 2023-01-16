@@ -14,7 +14,7 @@ tabPanelfooter <- fluidRow(
 ui <- navbarPage(
     title = div(
         style = "color:#430E8A; text-align: left; font-size: 22px; font-weight: 600",
-        tags$a(href="https://www.time.gov/", img(src="monty.png", height = 50, width = 50)),
+        tags$a(href="https://www.time.gov/", img(src="monty-python-clock.png", height = 50, width = 50)),
         "Timesheet Analysis"
     ),
     tabPanel(title = "Plots",

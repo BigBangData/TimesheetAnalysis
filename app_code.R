@@ -1,10 +1,12 @@
-# TO DO
-# 1. update README with higher-level biz considerations: limitations (no variable rates)
-# 2. add to portfolio
+# Notes
+# ------
 
-# Notes:
-# To deploy (initial or otherwise), run: library(rsconnect); DeployApp()
-#   - the app's name (url) will be the name of the folder where app.R is located
+# To deploy (initial or otherwise), run: 
+# library(shiny)
+# runApp() # to test
+# library(rsconnect)
+# deployApp() # to deploy
+# The app's name (url) will be the name of the folder where app.R is located
 # https://bigbangdata.shinyapps.io/timesheetanalysis/
 
 
@@ -18,6 +20,7 @@ options(scipen=999)
 # suppress group by warnings
 options(dplyr.summarise.inform = FALSE)
 
+# Cannot install packages on deployment
 # install_packages <- function(pkg){
 #     new_pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
 #     if (length(new_pkg)) suppressMessages(install.packages(new_pkg, dependencies = TRUE))
