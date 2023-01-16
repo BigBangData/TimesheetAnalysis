@@ -250,17 +250,17 @@ source("faking_data/fake_data.R")
 
 ### Date-level Fakery
 
-To develop new fake data start with deciding which years you want on lines 25, 26, the variable names are self-explanatory:
+To develop new fake data start with deciding which years you want on lines 25, 26:
 
 <p align=center><img src="www/10_fake_years.jpg" width=550></p>
 
-The next decision is the proportion of work days to non-work days, which is set at 30% in line 38. One of the limitations of the script is that I decided, much like a bookkeeper I know 😉, not to limit workdays to weekdays:
+The next decision is the proportion of work days to non-work days, which is set at 30% in line 38. This is a bit more than having weekends off, however, of the limitations of the script is that I decided (much like a bookkeeper I know 😉) not to limit workdays to weekdays:
 
 <p align=center><img src="www/11_fake_workdayprop.jpg" width=550></p>
 
-The fine-grained control I neede was for deciding `start times for a workday`, which I extrapolated by analyzing the actual data from my wife's bookkeeping timesheet. The probabilities of starting hours and minutes are a whole fascinating topic I'm choosing not to dwell upon in this README!
+For `start times for a workday` I sampled probabilities of starting at a particular hour or minute from real data (from a year of my wife's bookkeeping timesheet). The probabilities of starting hours and minutes are a whole fascinating 🔥 topic I'm choosing not to dwell upon in this README!
 
-The next fine-grained control was the `number of session per day`, which is highly correlated with the start times as one can imagine. This also involved some probabilities and choices.
+The next fine-grained control was the `number of session per day`, which is highly correlated with the start times, as one can imagine. This also involved some probabilities and choices.
 
 ### Session-level Fakedom
 
@@ -268,10 +268,10 @@ Starting on line 119 I `explode the date-level data into session-level data`, wh
 
 <p align=center><img src="www/12_fake_sessions.jpg" width=550></p>
 
-Perhaps the most complex part is to recreate the `session durations` which are highly variable, and not go over midnight too often 🤣 - which ended up being a multi-step process of:
-- sampling durations from probabilities derived from actual data (the `session_min_prob.csv` file), given a `start period` ("morning", "afternoon", "evening")
-- reducing the length of long sessions when there were many sessions in a given day
-- repeating step 2 again if there were still long sessions
+Perhaps the most complex part is to recreate the `session durations` which are highly variable, and not go over midnight too often 🤣 - which ended up being a 3-step process of:
+1. sampling durations from probabilities derived from actual data (the `session_min_prob.csv` file), given a `start period` ("morning", "afternoon", "evening")
+2. reducing the length of long sessions for days with lots of sessions
+3. repeating step 2 if there were still long sessions in those days
 
 <p align=center><img src="www/13_fake_session_durations.jpg" width=550></p>
 
@@ -280,13 +280,14 @@ Even after all this, I had to make sure the `date` field was representative of t
 
 ### Client Fakeness
 
-Faking client data was a lot easier and I just made up some probabilities. Note that there is client data in the `timesheet` as well as the `clients` "tab" of the original Excel file.
+Faking client data was a lot easier and I just made up data entirely - this could've been done using mockaroo or Python's Faker or honestly, in Excel, but I wanted a reproducible and consistent way - thus the R script.
 
-I could've easily faked the `clients` data in Excel itself but wanted a reproducible way - thus the R script.
+Note that there is client data in the `timesheet` as well as the `clients` "tab" of the original Excel file.
 
-As a final note, one major limiation of the project is that client rates are fixed and 1:1 with the client codes so that if a bookkeeper raised rates, she'd have to create a new code for that client. In a way, the client code is a `client-and-rate code` as it stands.
+As a final note, __one major limitation of the project__ is that client rates are fixed and 1:1 with the client codes so that if a bookkeeper raised rates, she'd have to create a new code for that client. As it stands, the client code is a `client-and-rate code` of sorts. 
 
 If you've made it this far, congratulations 🙇 and thanks for reading 🙏🏻!
 
 <p align=center><img src="www/monty-python-clock.png" width=60></p>
+
 ---
