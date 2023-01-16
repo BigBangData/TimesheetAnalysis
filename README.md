@@ -67,7 +67,7 @@ __Plots__
 
 There are 10 reports, see [details](#details) below for specific usage.
 
-<img src="www/01_plots_reports.png">
+<p align=center><img src="www/01_plots_reports.png" width=700></p>
 
 The `Year`, `Quarter`, and `Month` menus affect the `Start Date` and `End Date` date pickers and interact independently of each other. One must trigger an event by selecting a *different* value in one of these menus (re-selecting the same value won't affect the date pickers).
 
@@ -87,8 +87,6 @@ There are two types:
 
 Again, "biz" is treated as a "client" of sorts. All other codes identify actual paying clients. In this project I faked the codes with some Nasdaq symbols of a few companies you might have heard about in the (fake?) news.
 
-
-
 ```
 ```
 
@@ -96,7 +94,7 @@ __Data & Downloads tab__
 
 In this tab one can view and download the data and plot selected in the `Plots` tab.
 
-<img src="www/05_data_menu.png">
+<p align=center><img src="www/05_data_menu.png" width=750></p>
 
 
 The data downloads as CSV and the plots as PNG with a few customizations possible, which might come in handy depending on the plot. In particular, the "Daily Hours by Client" report will only work well on the screen for a period of about two weeks, but if a month is desired one can download a long PNG using 16" height by 10" width (see [demo](#demo)).
@@ -130,13 +128,11 @@ __Timesheeet__ is a more dymanic, long dataset at the session-level, containing 
 
 There is a variety of plots that could be made with data at this level, but the most useful we found was a boxplot comparison with a `geom_jitter` layer of dots to show not just the distribution of hours worked but also the volume of sessions for each client, given a period.
 
-
 __2. Daily Hours__
 
 The simplest aggregation simply calculates total hours worked each day and an average hours worked (in work days) for the period selected. The barplot-timeseries was a bit tricky as I wanted to capture non workdays as well. This helps with the bookkeeper's overall tracking of their hours, not specific reporting of client hours.
 
 __3. Daily Hours by Client__
-
 
 This is the solution for specific client hours and a comparison of monthly vs quarterly clients and one's own business hours. It is a panel grid where each panel is a working day. If more than 8 working days are chosen it splits into two columns of panels. This is the plot that can get overloaded with days on screen but can be downloaded in tall format if an entire month is desired.
 
@@ -161,16 +157,13 @@ We see that for Dec. 2022, my fake bookkeeper got the most revenue working on Nv
 
 On the flipside, the best rate-per-hour that month (for monthly clients) was achieved working on Johnson & Johnson's books, but the workload was a bit light so the revenue is below the average ($411.98).
 
-
 `*` which is __100% correlated__ 😅 with hours worked and the rate so we can expect to see a cone of blue clients emanating from the origin of the graph and red clients in the top-left and green clients in the bottom-right.
-
 
 __7. Quarterly Clients__
 
 Same as "Monthly Clients", for quarterly clients.
 
 <p align="center"><img src="www/obama_mic_drop.gif" width=300></p>
-
 
 __8. Month Report__
 
@@ -196,8 +189,7 @@ The plots tab shows something that can't be easily gleaned in the data tab, whic
 
 ## [Reproduce the app](#reproduce-the-app)
 
-
-To reproduce, clone this repo and follow these steps, which for the most part should ensure reproducibility:
+To reproduce the app, clone this repo and follow these steps, which for the most part should ensure reproducibility (to reproduce or fake new data see [faking data](#faking-data) below):
 1. Download R from [CRAN](https://cran.r-project.org/) for your machine and platform
 2. Open R and install the following packages by issuing in the Console:
 
@@ -218,7 +210,6 @@ setwd("../Github/TimesheetAnalysis/")
 ```
 
 - Tip: issue `getwd()` to find out where R runs from by default
-
 
 4. Test running the app locally by loading `shiny` and running the `runApp()` command:
 
@@ -244,11 +235,58 @@ If your day is ruined by `runApp()` and `DeployApp()` like mine:
 
 <p align=center><img src="www/standards.jpg" width=400></p>
 
-
 ---
 ## [Faking data](#faking-data)
 
+There are many use-cases for faking data, such as anonymizing user data for a proof-of-concept (POC) project or for user-acceptance testing (UAT) with audiences that don't have permission to access your data.
+
+I've used [mockaroo](https://www.mockaroo.com/) and [Python's Faker package](https://github.com/joke2k/faker) before but one disadvantage was that I couldn't have a fine-grained control of the data being faked. So I created my own faker.
+
+To merely recreate the CSV files in the `data` directory, delete those files and source the `fake_data.R` script directly from the main project directory by issuing:
+
+```
+source("faking_data/fake_data.R")
+```
+
+### Date-level Fakery
+
+To develop new fake data start with deciding which years you want on lines 25, 26, the variable names are self-explanatory:
+
+<p align=center><img src="www/10_fake_years.jpg" width=550></p>
+
+The next decision is the proportion of work days to non-work days, which is set at 30% in line 38. One of the limitations of the script is that I decided, much like a bookkeeper I know 😉, not to limit workdays to weekdays:
+
+<p align=center><img src="www/11_fake_workdayprop.jpg" width=550></p>
+
+The fine-grained control I neede was for deciding `start times for a workday`, which I extrapolated by analyzing the actual data from my wife's bookkeeping timesheet. The probabilities of starting hours and minutes are a whole fascinating topic I'm choosing not to dwell upon in this README!
+
+The next fine-grained control was the `number of session per day`, which is highly correlated with the start times as one can imagine. This also involved some probabilities and choices.
+
+### Session-level Fakedom
+
+Starting on line 119 I `explode the date-level data into session-level data`, which is implemented in a human-readable nested for loop - the reason this script is a bit slow. If I was planning on creating millions of rows I'd probably revise this using a more functional style (i.e. vectorization):
+
+<p align=center><img src="www/12_fake_sessions.jpg" width=550></p>
+
+Perhaps the most complex part is to recreate the `session durations` which are highly variable, and not go over midnight too often 🤣 - which ended up being a multi-step process of:
+- sampling durations from probabilities derived from actual data (the `session_min_prob.csv` file), given a `start period` ("morning", "afternoon", "evening")
+- reducing the length of long sessions when there were many sessions in a given day
+- repeating step 2 again if there were still long sessions
+
+<p align=center><img src="www/13_fake_session_durations.jpg" width=550></p>
 
 
+Even after all this, I had to make sure the `date` field was representative of the `date started` and not the `date ended` work for days that might go over midnight.
 
+### Client Fakeness
+
+Faking client data was a lot easier and I just made up some probabilities. Note that there is client data in the `timesheet` as well as the `clients` "tab" of the original Excel file.
+
+I could've easily faked the `clients` data in Excel itself but wanted a reproducible way - thus the R script.
+
+As a final note, one major limiation of the project is that client rates are fixed and 1:1 with the client codes so that if a bookkeeper raised rates, she'd have to create a new code for that client. In a way, the client code is a `client-and-rate code` as it stands.
+
+If you've made it this far, congratulations 🙇 and thanks for reading 🙏🏻!
+
+<p align=center><img src="www/monty-python-clock.png" width=60></p>
 ---

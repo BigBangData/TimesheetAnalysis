@@ -1,8 +1,7 @@
 ########################################################################################
 ## SETUP
 
-# uncomment to dev, comment to source
-# setwd("../GitHub/TimesheetAnalysis/faking_data")
+setwd("faking_data")
 
 # cleanup env
 rm(list=ls())
@@ -410,3 +409,4 @@ clients <- data.frame(
 
 # SAVE
 write.csv(clients, "../data/clients.csv", row.names=FALSE)
+setwd("..")
